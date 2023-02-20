@@ -39,17 +39,33 @@ public class Players{
         }
     }
     public void savePlayer(String name, double acc, int numGuess, int numPlayed, int numCompleted){
-        //needs changed to overwrite the data where the name appears
-        try{ 
-            FileWriter mywriter = new FileWriter("AllPlayer.txt");
-            mywriter.write(name +" "+ acc +" "+ numGuess +" "+ numPlayed +" "+ numCompleted);
-            mywriter.close();
-            System.out.println("player successfully added");
-        } catch (IOException e) {
-            System.out.println("An error occured");
-            e.printStackTrace();
+        
+            String file = "AllPlayers.txt";
+            Player p = new Player(name,acc,numGuess,numPlayed,numCompleted);
+            try (Scanner in = new Scanner(new File(file))) {
+                StringBuffer buffer = new StringBuffer();
+                while (in.hasNextLine()){
+                    buffer.append(in.nextLine() + System.lineSeparator());
+                }
+                String data = buffer.toString();
+                in.close();
+                String oldData = (findPlayer(p)).toString();
+                data = data.replaceAll(oldData, p.toString());
+                try {
+                    FileWriter mywriter = new FileWriter("AllPlayer.txt");
+                    mywriter.append(data);
+                    mywriter.flush();
+                    mywriter.close();
+                } catch (IOException e) {
+                    System.out.println("file not found");
+                    e.printStackTrace();
+                }
+            } catch (FileNotFoundException e) {
+                System.out.println("file not found");
+                e.printStackTrace();
+            }
         }
-    }
+    
     public Player findPlayer(Player p){
         File myObj = new File("AllPlayers.txt");
         try (Scanner in = new Scanner(myObj)) {
