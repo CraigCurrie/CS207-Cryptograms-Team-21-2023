@@ -3,12 +3,11 @@ import java.util.Scanner;
 public class Game{
     
     
-    private Player currPlayer;
-    Players currentPlayer = new Players();
+    private Player currentPlayer;
+    Players GamePlayers = new Players();
 
    public Game(){
-
-        currPlayer = new Player(null, 0, 0, 0, 0);
+        currentPlayer = new Player(null, 0, 0, 0, 0);
     }
     public void getHint(){
 
@@ -20,11 +19,11 @@ public class Game{
         System.out.println("please enter your username");
         newPlayerName = in.nextLine();
         Player p = new Player(newPlayerName,0,0,0,0);
-        if (currentPlayer.findPlayer(p) == null){
+        if (GamePlayers.findPlayer(p) == null){
             System.out.println("would you like to create a new account? Y or N?");
             String input = in.nextLine();
             if(input.equals("Y")){
-                currentPlayer.addPlayer(newPlayerName, 100, 0, 0, 0);
+                GamePlayers.addPlayer(newPlayerName, 100, 0, 0, 0);
                 System.out.println("new account succesfully created with username- " + newPlayerName);
             }else if(input.equals("N") ){                    
                 System.out.println("New account has not been made");
@@ -35,7 +34,7 @@ public class Game{
             in.close();
         }else{
         System.out.println("Account successfully loaded");
-        currPlayer = currentPlayer.findPlayer(p);
+        currentPlayer = GamePlayers.findPlayer(p);
         }
     }
     public void playGame(){
@@ -55,7 +54,7 @@ public class Game{
     }
    
     public void savePlayer(){
-        currentPlayer.savePlayer(currPlayer);
+        GamePlayers.savePlayer(currentPlayer);
     }
     public void loadGame(){
 
@@ -66,6 +65,10 @@ public class Game{
     public static void main(String[] args){
         Game G = new Game();
         G.loadPlayer();
+        //test to check saveing
+        //G.currPlayer.updateAccuracy(50); 
+        //System.out.println(G.currPlayer.getAccuracy());
+        G.savePlayer();
     }
 }
     

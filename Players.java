@@ -51,8 +51,9 @@ public class Players{
                 }
                 String data = buffer.toString();
                 in.close();
-                String oldData = (findPlayer(p)).toString();
-                data = data.replaceAll(oldData, p.toString());
+                Player old = findPlayer(p);
+                String oldData = (old.username +" "+ old.accuracy +" "+ old.totalGuesses +" "+ old.cryptogramsPlayed +" "+ old.cryptogramsCompleted);
+                data = data.replaceAll(oldData, (p.username +" "+ p.accuracy +" "+ p.totalGuesses +" "+ p.cryptogramsPlayed +" "+ p.cryptogramsCompleted));
                 try {
                     FileWriter mywriter = new FileWriter("AllPlayers.txt");
                     mywriter.append(data);
