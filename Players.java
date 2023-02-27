@@ -40,8 +40,7 @@ public class Players{
         }
     }
 
-    public void savePlayer(String name, double acc, int numGuess, int numPlayed, int numCompleted){
-            Player p = new Player(name,acc,numGuess,numPlayed,numCompleted);
+    public void savePlayer(Player p){;
             try (Scanner in = new Scanner(new File("AllPlayers.txt"))) {
                 StringBuffer buffer = new StringBuffer();
                 while (in.hasNextLine()){
