@@ -1,12 +1,15 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Game{
     
     private Player currentPlayer;
+    private Cryptogram cryptoGame;
     Players GamePlayers = new Players();
 
    public Game(){
         currentPlayer = new Player(null, 0, 0, 0, 0);
+        cryptoGame = new Cryptogram("zerkin on main", "abcdefghijklmnopqrstuvwxyz");
     }
     public void getHint(){
 
@@ -50,7 +53,7 @@ public class Game{
 
     }
     public void viewFrequencies(){
-
+        System.out.println(Arrays.toString(cryptoGame.getFrequencies(cryptoGame.getPhrase())));
     }
    
     public void savePlayer(){
@@ -69,6 +72,7 @@ public class Game{
         //G.currPlayer.updateAccuracy(50); 
         //System.out.println(G.currPlayer.getAccuracy());
         G.savePlayer();
+        //G.viewFrequencies();
     }
 }
     

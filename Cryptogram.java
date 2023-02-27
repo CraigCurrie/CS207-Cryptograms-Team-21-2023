@@ -26,8 +26,8 @@ public class Cryptogram{
     }
 
 
-    public int getFrequencies(String alphabet, String phrase){
- 
-        return 0;
+    public int[] getFrequencies(String phrase){
+        int[] arr = {0};
+        return arr;
     }
 }
