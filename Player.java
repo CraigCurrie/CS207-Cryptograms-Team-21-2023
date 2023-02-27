@@ -17,10 +17,10 @@ public class Player{
         accuracy = combAcc/2;
     }
     public void incrementCryptogramsCompleted(){
-        cryptogramsCompleted = cryptogramsCompleted + 1;
+        cryptogramsCompleted++;
     }
     public void incrementCryptogramsPlayed(){
-        cryptogramsPlayed = cryptogramsPlayed + 1;
+        cryptogramsPlayed++;
     }
     public Double getAccuracy() {
         return accuracy;
