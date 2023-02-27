@@ -7,14 +7,14 @@ public class Player{
 
     public Player(String name, double acc, int numGuess,int numPlayed,int numCompleted){
         username = name;
-        accuracy= acc;
+        accuracy = acc;
         totalGuesses = numGuess;
         cryptogramsPlayed = numPlayed;
         cryptogramsCompleted = numCompleted;
     }    
     public void updateAccuracy(double acc){
-        double combAcc = accuracy + acc;
-        accuracy = combAcc/2;
+        accuracy += acc;
+        accuracy /= 2;
     }
     public void incrementCryptogramsCompleted(){
         cryptogramsCompleted++;

@@ -9,6 +9,7 @@ import java.io.IOException;
 public class Players{
     List<Player> allPlayers = new ArrayList<Player>();
 
+    //this should just be the constructor of Players
     public void LoadPlayers(){
         File myObj = new File("AllPlayers.txt");
         try (Scanner in = new Scanner(myObj)) {
@@ -32,17 +33,16 @@ public class Players{
             FileWriter mywriter = new FileWriter("AllPlayer.txt");
             mywriter.write(name +" "+ acc +" "+ numGuess +" "+ numPlayed +" "+ numCompleted);
             mywriter.close();
-            System.out.println("player successfully added");
+            System.out.println("Player successfully added.");
         } catch (IOException e) {
-            System.out.println("An error occured");
+            System.out.println("An error occured.");
             e.printStackTrace();
         }
     }
+
     public void savePlayer(String name, double acc, int numGuess, int numPlayed, int numCompleted){
-        
-            String file = "AllPlayers.txt";
             Player p = new Player(name,acc,numGuess,numPlayed,numCompleted);
-            try (Scanner in = new Scanner(new File(file))) {
+            try (Scanner in = new Scanner(new File("AllPlayers.txt"))) {
                 StringBuffer buffer = new StringBuffer();
                 while (in.hasNextLine()){
                     buffer.append(in.nextLine() + System.lineSeparator());
@@ -99,6 +99,7 @@ public class Players{
         }
         return result;
     }
+
     public ArrayList<Integer> getAllPlayersCryptogramsPlayed(){
         LoadPlayers();
         int i = 0;
@@ -111,6 +112,7 @@ public class Players{
         }
         return result;
     }
+
     public ArrayList<Integer> getAllPlayersCryptogramsCompleted(){
         LoadPlayers();
         int i = 0;
@@ -123,8 +125,4 @@ public class Players{
         }
         return result;
     }
-    
-
-
 }
-
