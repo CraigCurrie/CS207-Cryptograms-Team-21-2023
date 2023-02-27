@@ -1,3 +1,4 @@
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -30,9 +31,11 @@ public class Players{
     public void addPlayer(String name, double acc, int numGuess, int numPlayed, int numCompleted){
         allPlayers.add(new Player(name,acc,numGuess,numPlayed,numCompleted));
         try{ 
-            FileWriter mywriter = new FileWriter("AllPlayer.txt");
-            mywriter.write(name +" "+ acc +" "+ numGuess +" "+ numPlayed +" "+ numCompleted);
-            mywriter.close();
+            FileWriter mywriter = new FileWriter("AllPlayers.txt", true);
+            BufferedWriter bw = new BufferedWriter(mywriter);
+            bw.newLine();
+            bw.write(name +" "+ acc +" "+ numGuess +" "+ numPlayed +" "+ numCompleted);
+            bw.close();
             System.out.println("Player successfully added.");
         } catch (IOException e) {
             System.out.println("An error occured.");
@@ -51,7 +54,7 @@ public class Players{
                 String oldData = (findPlayer(p)).toString();
                 data = data.replaceAll(oldData, p.toString());
                 try {
-                    FileWriter mywriter = new FileWriter("AllPlayer.txt");
+                    FileWriter mywriter = new FileWriter("AllPlayers.txt");
                     mywriter.append(data);
                     mywriter.flush();
                     mywriter.close();
@@ -73,11 +76,12 @@ public class Players{
             while (in.hasNextLine()) {
                 
                 data = in.nextLine().split(" ");
-                Player result = new Player(data[0],Integer.valueOf(data[1]),Integer.valueOf(data[2]),Integer.valueOf(data[3]),Integer.valueOf(data[4]));
-                if (data[0] == p.username){ 
+                Player result = new Player(data[0],Double.valueOf(data[1]),Integer.valueOf(data[2]),Integer.valueOf(data[3]),Integer.valueOf(data[4]));
+                if (data[0].equals(p.username)){ 
                     return result;
-                }
-             }
+                    
+                }                
+            }
         }catch (FileNotFoundException e) {
             System.out.println("File not found");
             e.printStackTrace();
