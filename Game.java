@@ -2,7 +2,6 @@ import java.util.Scanner;
 
 public class Game{
     
-    
     private Player currentPlayer;
     Players GamePlayers = new Players();
 
@@ -24,6 +23,7 @@ public class Game{
             String input = in.nextLine();
             if(input.equals("Y")){
                 GamePlayers.addPlayer(newPlayerName, 100, 0, 0, 0);
+                currentPlayer = GamePlayers.findPlayer(p);
                 System.out.println("new account succesfully created with username- " + newPlayerName);
             }else if(input.equals("N") ){                    
                 System.out.println("New account has not been made");
@@ -65,7 +65,7 @@ public class Game{
     public static void main(String[] args){
         Game G = new Game();
         G.loadPlayer();
-        //test to check saveing
+        //test to check saving
         //G.currPlayer.updateAccuracy(50); 
         //System.out.println(G.currPlayer.getAccuracy());
         G.savePlayer();
