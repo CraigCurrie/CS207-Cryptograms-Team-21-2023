@@ -26,8 +26,21 @@ public class Cryptogram{
     }
 
 
-    public int getFrequencies(String alphabet, String phrase){
- 
-        return 0;
+    public int[] getFrequencies(String phrase){
+        int[] letters = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+        char[] alphabet = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+        for(int i = 0; i < phrase.length(); i++){
+            char letter = phrase.charAt(i);
+            boolean running = true;
+            int x = 0;
+            while(running){
+                if(letter == alphabet[x]){
+                    letters[x]++;
+                    running = false;
+                }
+                x++;
+            }
+        }
+        return letters;
     }
 }
