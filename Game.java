@@ -13,6 +13,7 @@ public class Game{
     private List<Cryptogram> allCryptograms = new ArrayList<Cryptogram>();
     private List<Character> currentGame = new ArrayList<Character>();
     private List<Integer> currentGameMap = new ArrayList<Integer>();
+    private List<String> guessPath = new ArrayList<String>();
 
    public Game(){
         currentPlayer = new Player(null, 0, 0, 0, 0);
@@ -69,18 +70,27 @@ public class Game{
         while(running == true){
             String[] data = null;
             System.out.println(currentGame);
-            System.out.println("please enter your guess and its position (e.g c 1)");
+            System.out.println("please enter your guess and its position (e.g c 1) enter undo to undo your previous guess");
             data = in.nextLine().split(" ");
-            if (Integer.valueOf(data[1]) < currentGameMap.size()){
+            if (data[0].equals("undo")){
+                String[] guessPathData = null;
+                guessPathData = guessPath.get(guessPath.size()-1).split(" "); 
+                undoLetter(guessPathData[0].charAt(0), guessPathData[1].charAt(0), Integer.valueOf(guessPathData[2]));
+
+            }else if (Integer.valueOf(data[1]) < currentGameMap.size()){
                 enterLetter(data[0].charAt(0),Integer.valueOf(data[1]));
                 if (currentGame.toString().substring(1, 3 * currentGame.size() - 1).replaceAll(", ", "").equals((currentCryptogram.cryptogramPhrase).replaceAll(" ",""))){
                     System.out.println("well done! The cryptogram has been solved!");
                     running = false;
                 }
-            }else{
+            }
+            else{
                 System.out.println("please enter a valid position");
-            }        
-            System.out.println(currentGame.toString().substring(1, 3 * currentGame.size() - 1).replaceAll(", ", "") +" "+ (currentCryptogram.cryptogramPhrase).replaceAll(" ",""));
+            } 
+            //test for checking the correct answer check       
+            //System.out.println(currentGame.toString().substring(1, 3 * currentGame.size() - 1).replaceAll(", ", "") +" "+ (currentCryptogram.cryptogramPhrase).replaceAll(" ",""));
+            //test to see last stored undoPath
+            //System.out.println(String.valueOf(guessPath.get(guessPath.size()-1)));
         }
         in.close();
 
@@ -107,13 +117,19 @@ public class Game{
     public void enterLetter(char c, int pos){
         for(int i = 0; i < currentGameMap.size(); i++){
             if (currentGameMap.get(pos) == currentGameMap.get(i)){
+                guessPath.add( String.valueOf(c +" "+ currentGame.get(pos) + " " + pos));
                 currentGame.set(i,c);
             }
         
         }
     }
-    public void undoLetter(){
-
+    public void undoLetter(char n, char o, int pos){
+        for(int i = 0; i < currentGameMap.size(); i++){
+            if (currentGameMap.get(pos) == currentGameMap.get(i)){
+                guessPath.set(guessPath.size() -1, null);
+                currentGame.set(i, o);
+            }
+        }
     }
     public void viewFrequencies(){
         System.out.println(Arrays.toString(cryptoGame.getFrequencies()));
