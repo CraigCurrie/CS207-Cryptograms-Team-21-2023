@@ -11,6 +11,8 @@ public class Game{
     private Cryptogram cryptoGame;
     Players GamePlayers = new Players();
     private List<Cryptogram> allCryptograms = new ArrayList<Cryptogram>();
+    private List<Character> currentGame = new ArrayList<Character>();
+    private List<Integer> currentGameMap = new ArrayList<Integer>();
 
    public Game(){
         currentPlayer = new Player(null, 0, 0, 0, 0);
@@ -61,15 +63,54 @@ public class Game{
         }
     }
     public void playGame(){
+        Cryptogram currentCryptogram = generateCryptogram();
+        Boolean running = true;
+        Scanner in = new Scanner(System.in);
+        while(running == true){
+            String[] data = null;
+            System.out.println(currentGame);
+            System.out.println("please enter your guess and its position (e.g c 1)");
+            data = in.nextLine().split(" ");
+            if (Integer.valueOf(data[1]) < currentGameMap.size()){
+                enterLetter(data[0].charAt(0),Integer.valueOf(data[1]));
+                if (currentGame.toString().substring(1, 3 * currentGame.size() - 1).replaceAll(", ", "").equals((currentCryptogram.cryptogramPhrase).replaceAll(" ",""))){
+                    System.out.println("well done! The cryptogram has been solved!");
+                    running = false;
+                }
+            }else{
+                System.out.println("please enter a valid position");
+            }        
+            System.out.println(currentGame.toString().substring(1, 3 * currentGame.size() - 1).replaceAll(", ", "") +" "+ (currentCryptogram.cryptogramPhrase).replaceAll(" ",""));
+        }
+        in.close();
 
     }
     public Cryptogram generateCryptogram(){
         int x = (int)((Math.random() * allCryptograms.size()));
         cryptoGame = allCryptograms.get(x);
+        for(int i1 = 0; i1 < (cryptoGame.cryptogramPhrase).length(); i1++){
+            if (cryptoGame.cryptogramPhrase.charAt(i1) != ' '){
+                for(int i2 = 0; i2 < (cryptoGame.Alphabet).length(); i2++){
+                    if (cryptoGame.Alphabet.charAt(i2) ==(cryptoGame.cryptogramPhrase).charAt(i1)){
+                        currentGameMap.add(i2);
+                    }
+                
+                }
+            }        
+        }
+        for(int i =0; i < currentGameMap.size(); i++){
+            currentGame.add(i, '_');
+        }
+
         return allCryptograms.get(x);
     }
-    public void enterLetter(){
-
+    public void enterLetter(char c, int pos){
+        for(int i = 0; i < currentGameMap.size(); i++){
+            if (currentGameMap.get(pos) == currentGameMap.get(i)){
+                currentGame.set(i,c);
+            }
+        
+        }
     }
     public void undoLetter(){
 
@@ -97,6 +138,8 @@ public class Game{
         //test to check genCrypto
         //Cryptogram C = G.generateCryptogram();
         //System.out.printf(C.cryptogramPhrase +" "+ C.cypher);
+        //System.out.println(G.currentGameMap);
+        G.playGame();
     }
 }
     
