@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -9,13 +10,13 @@ public class Game{
     private Player currentPlayer;
     private Cryptogram cryptoGame;
     Players GamePlayers = new Players();
-    private List<Cryptogram> allCryptograms;
+    private List<Cryptogram> allCryptograms = new ArrayList<Cryptogram>();
 
    public Game(){
         currentPlayer = new Player(null, 0, 0, 0, 0);
         cryptoGame = new Cryptogram("zerkin on main", "abcdefghijklmnopqrstuvwxyz");
 
-        File myObj = new File("AllCryptos,txt");
+        File myObj = new File("AllCryptos.txt");
         try (Scanner in = new Scanner(myObj)){
             String[] data = null;
 
@@ -92,8 +93,10 @@ public class Game{
         //G.currPlayer.updateAccuracy(50); 
         //System.out.println(G.currPlayer.getAccuracy());
         G.savePlayer();
-        //G.viewFrequencies();
-        G.generateCryptogram();
+        G.viewFrequencies();
+        //test to check genCrypto
+        //Cryptogram C = G.generateCryptogram();
+        //System.out.printf(C.cryptogramPhrase +" "+ C.cypher);
     }
 }
     
