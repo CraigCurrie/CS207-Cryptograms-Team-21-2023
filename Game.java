@@ -53,7 +53,7 @@ public class Game{
 
     }
     public void viewFrequencies(){
-        System.out.println(Arrays.toString(cryptoGame.getFrequencies(cryptoGame.getPhrase())));
+        System.out.println(Arrays.toString(cryptoGame.getFrequencies()));
     }
    
     public void savePlayer(){
