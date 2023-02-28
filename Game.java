@@ -1,4 +1,7 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Game{
@@ -6,11 +9,27 @@ public class Game{
     private Player currentPlayer;
     private Cryptogram cryptoGame;
     Players GamePlayers = new Players();
+    private List<Cryptogram> allCryptograms;
 
    public Game(){
         currentPlayer = new Player(null, 0, 0, 0, 0);
         cryptoGame = new Cryptogram("zerkin on main", "abcdefghijklmnopqrstuvwxyz");
+
+        File myObj = new File("AllCryptos,txt");
+        try (Scanner in = new Scanner(myObj)){
+            String[] data = null;
+
+            while (in.hasNextLine()){
+
+                data = in.nextLine().split(" # ");
+                allCryptograms.add(new Cryptogram(data[0],data[1]));
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+            e.printStackTrace();
+        }
     }
+    
     public void getHint(){
 
     }
@@ -43,8 +62,10 @@ public class Game{
     public void playGame(){
 
     }
-    public void generateCryptogram(){
-
+    public Cryptogram generateCryptogram(){
+        int x = (int)((Math.random() * allCryptograms.size()));
+        cryptoGame = allCryptograms.get(x);
+        return allCryptograms.get(x);
     }
     public void enterLetter(){
 
@@ -52,10 +73,9 @@ public class Game{
     public void undoLetter(){
 
     }
-    public void viewFrequencies(){
+    public void viewFrequencies(Cryptogram c){
         System.out.println(Arrays.toString(cryptoGame.getFrequencies(cryptoGame.getPhrase())));
-    }
-   
+    }  
     public void savePlayer(){
         GamePlayers.savePlayer(currentPlayer);
     }
@@ -73,6 +93,7 @@ public class Game{
         //System.out.println(G.currPlayer.getAccuracy());
         G.savePlayer();
         //G.viewFrequencies();
+        G.generateCryptogram();
     }
 }
     
