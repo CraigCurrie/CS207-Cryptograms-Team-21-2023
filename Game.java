@@ -73,9 +73,9 @@ public class Game{
     public void undoLetter(){
 
     }
-    public void viewFrequencies(Cryptogram c){
-        System.out.println(Arrays.toString(cryptoGame.getFrequencies(cryptoGame.getPhrase())));
-    }  
+    public void viewFrequencies(){
+        System.out.println(Arrays.toString(cryptoGame.getFrequencies()));
+    }
     public void savePlayer(){
         GamePlayers.savePlayer(currentPlayer);
     }
