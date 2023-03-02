@@ -12,12 +12,13 @@ public class Game{
     Players GamePlayers = new Players();
     private List<Cryptogram> allCryptograms = new ArrayList<Cryptogram>();
     private List<Character> currentGame = new ArrayList<Character>();
+    private List<Character> currentGameJumbled = new ArrayList<Character>();
     private List<Integer> currentGameMap = new ArrayList<Integer>();
     private List<String> guessPath = new ArrayList<String>();
 
    public Game(){
         currentPlayer = new Player(null, 0, 0, 0, 0);
-        cryptoGame = new Cryptogram("zerkin on main", "abcdefghijklmnopqrstuvwxyz");
+        cryptoGame = new Cryptogram("", "");
 
         File myObj = new File("AllCryptos.txt");
         try (Scanner in = new Scanner(myObj)){
@@ -67,6 +68,9 @@ public class Game{
         Cryptogram currentCryptogram = generateCryptogram();
         Boolean running = true;
         Scanner in = new Scanner(System.in);
+        for(int i = 0; i < currentGame.size(); i++){
+            currentGameJumbled.add(currentCryptogram.cypher.charAt(i)); 
+        }
         while(running == true){
             String[] data = null;
             System.out.println(currentGame);
@@ -80,6 +84,7 @@ public class Game{
             }else if (Integer.valueOf(data[1]) < currentGameMap.size()){
                 enterLetter(data[0].charAt(0),Integer.valueOf(data[1]));
                 if (currentGame.toString().substring(1, 3 * currentGame.size() - 1).replaceAll(", ", "").equals((currentCryptogram.cryptogramPhrase).replaceAll(" ",""))){
+                    System.out.println(currentGame);
                     System.out.println("well done! The cryptogram has been solved!");
                     running = false;
                 }
@@ -91,6 +96,8 @@ public class Game{
             //System.out.println(currentGame.toString().substring(1, 3 * currentGame.size() - 1).replaceAll(", ", "") +" "+ (currentCryptogram.cryptogramPhrase).replaceAll(" ",""));
             //test to see last stored undoPath
             //System.out.println(String.valueOf(guessPath.get(guessPath.size()-1)));
+            //current game map check
+            //System.out.println(currentGameMap);
         }
         in.close();
 
@@ -103,8 +110,7 @@ public class Game{
                 for(int i2 = 0; i2 < (cryptoGame.Alphabet).length(); i2++){
                     if (cryptoGame.Alphabet.charAt(i2) ==(cryptoGame.cryptogramPhrase).charAt(i1)){
                         currentGameMap.add(i2);
-                    }
-                
+                    }          
                 }
             }        
         }
@@ -117,16 +123,15 @@ public class Game{
     public void enterLetter(char c, int pos){
         for(int i = 0; i < currentGameMap.size(); i++){
             if (currentGameMap.get(pos) == currentGameMap.get(i)){
-                guessPath.add( String.valueOf(c +" "+ currentGame.get(pos) + " " + pos));
+                guessPath.add(String.valueOf(c +" "+ currentGame.get(i) + " " + pos));
                 currentGame.set(i,c);
             }
-        
         }
     }
     public void undoLetter(char n, char o, int pos){
         for(int i = 0; i < currentGameMap.size(); i++){
             if (currentGameMap.get(pos) == currentGameMap.get(i)){
-                guessPath.set(guessPath.size() -1, null);
+                guessPath.remove(guessPath.size() -1);
                 currentGame.set(i, o);
             }
         }
@@ -150,11 +155,10 @@ public class Game{
         //G.currPlayer.updateAccuracy(50); 
         //System.out.println(G.currPlayer.getAccuracy());
         G.savePlayer();
-        G.viewFrequencies();
+        //G.viewFrequencies();
         //test to check genCrypto
         //Cryptogram C = G.generateCryptogram();
         //System.out.printf(C.cryptogramPhrase +" "+ C.cypher);
-        //System.out.println(G.currentGameMap);
         G.playGame();
     }
 }
