@@ -13,13 +13,15 @@ public class Game{
     Players GamePlayers = new Players();
     private List<Cryptogram> allCryptograms = new ArrayList<Cryptogram>();
     private List<Character> currentGame = new ArrayList<Character>();
-    //frequency TO DO
+    private List<Integer> currentFreqs = new ArrayList<Integer>();
     private List<Character> currentGameJumbled = new ArrayList<Character>();
     private List<Integer> currentGameMap = new ArrayList<Integer>();
     private List<String> guessPath = new ArrayList<String>();
     private Integer numGuesses = 0;
     private Integer numCorrectGuesses = 0;
     private Cryptogram globalCurrCryptogram = new Cryptogram("", "");
+    String Alphabet = "abcdefghijklmnopqrstuvwxyz";
+
 
    public Game() throws IOException{
         currentPlayer = new Player(null, 0, 0, 0, 0);
@@ -84,6 +86,7 @@ public class Game{
             for(int i2 = 0; i2 < currentCryptogram.cypher.length();i2++){
                 if (noSpaceCrypto.charAt(i) == currentCryptogram.cypher.charAt(i2)){
                     currentGameJumbled.add(currentCryptogram.Alphabet.charAt(i2)); 
+                    currentFreqs.add((currentCryptogram.getFrequencies())[i2]);
                 }
             }
         }
@@ -93,6 +96,7 @@ public class Game{
             String[] data = null;
             System.out.println("CRYPTOGRAM :"+currentGame);
             System.out.println("CYPHER     :"+currentGameJumbled);
+            System.out.println("FREQUENCIES:"+currentFreqs);
             System.out.println("please enter your guess and its position (e.g c 1) enter undo to undo your previous guess, to remove a guess type rem and the position you want to remove (e.g rem 1)");
             data = in.nextLine().split(" ");
             
@@ -219,6 +223,18 @@ public class Game{
     }
     public void viewFrequencies(){
         System.out.println(Arrays.toString(cryptoGame.getFrequencies()));
+    }
+    public Character intToChar(int i){
+        return Alphabet.charAt(i - 1);
+    }
+    public int chatToInt(Character c){
+        for(int i = 0; i < Alphabet.length(); i++){
+            if (Alphabet.charAt(i) == c){
+                return (i + 1);
+            }
+        }
+        //returns 0 if not found(it will find)
+        return 0;
     }
     public void savePlayer(){
         GamePlayers.savePlayer(currentPlayer);
