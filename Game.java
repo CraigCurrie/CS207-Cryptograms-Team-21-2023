@@ -79,25 +79,38 @@ public class Game{
         globalCurrCryptogram = currentCryptogram;
         Boolean running = true;
         Scanner in = new Scanner(System.in);
+        String noSpaceCrypto = currentCryptogram.cryptogramPhrase.replaceAll(" ", "");
         for(int i = 0; i < currentGame.size(); i++){
-            currentGameJumbled.add(currentCryptogram.cypher.charAt(i)); 
+            for(int i2 = 0; i2 < currentCryptogram.cypher.length();i2++){
+                if (noSpaceCrypto.charAt(i) == currentCryptogram.cypher.charAt(i2)){
+                    currentGameJumbled.add(currentCryptogram.Alphabet.charAt(i2)); 
+                }
+            }
         }
         //increases the current Players games played by 1
         currentPlayer.incrementCryptogramsPlayed();
         while(running == true){
             String[] data = null;
-            System.out.println(currentGame);
+            System.out.println("CRYPTOGRAM :"+currentGame);
+            System.out.println("CYPHER     :"+currentGameJumbled);
             System.out.println("please enter your guess and its position (e.g c 1) enter undo to undo your previous guess, to remove a guess type rem and the position you want to remove (e.g rem 1)");
             data = in.nextLine().split(" ");
-            if (data[0].equals("undo")){
+            
+            if(data[0].equals("undo")&& guessPath.size() == 0){
+                System.out.println("no guesses avaliable to be undone");
+            }
+            else if (data[0].equals("undo")){
                 String[] guessPathData = null;
                 guessPathData = guessPath.get(guessPath.size()-1).split(" "); 
                 undoLetter(guessPathData[0].charAt(0), guessPathData[1].charAt(0), Integer.valueOf(guessPathData[2]));
-
-            }else if(data[0].equals("rem")){
+            }
+            else if((data[1].matches("^-?\\d+$") == false)){
+                System.out.println("please use the correct formatting for input and correct arguments");
+            }
+            else if(data[0].equals("rem")){
                 remLetter(Integer.valueOf(data[1]));
             }
-            else if (Integer.valueOf(data[1]) < currentGameMap.size()){
+            else if (Integer.valueOf(data[1]) < currentGameMap.size() && data.length == 2){
                 enterLetter(data[0].charAt(0),Integer.valueOf(data[1]));
                 if (currentGame.toString().substring(1, 3 * currentGame.size() - 1).replaceAll(", ", "").equals((currentCryptogram.cryptogramPhrase).replaceAll(" ",""))){
                     System.out.println(currentGame);
@@ -113,7 +126,7 @@ public class Game{
                 }
             }
             else{
-                System.out.println("please enter a valid position");
+                System.out.println("please enter a valid position and command/number of command arguments");
             } 
             //test for checking the correct answer check       
             //System.out.println(currentGame.toString().substring(1, 3 * currentGame.size() - 1).replaceAll(", ", "") +" "+ (currentCryptogram.cryptogramPhrase).replaceAll(" ",""));
@@ -132,7 +145,7 @@ public class Game{
             if (cryptoGame.cryptogramPhrase.charAt(i1) != ' '){
                 for(int i2 = 0; i2 < (cryptoGame.Alphabet).length(); i2++){
                     if (cryptoGame.Alphabet.charAt(i2) ==(cryptoGame.cryptogramPhrase).charAt(i1)){
-                        currentGameMap.add(i2);
+                        currentGameMap.add(i2 + 1);
                     }          
                 }
             }        
@@ -140,20 +153,53 @@ public class Game{
         for(int i =0; i < currentGameMap.size(); i++){
             currentGame.add(i, '_');
         }
-
         return allCryptograms.get(x);
     }
     public void enterLetter(char c, int pos){
-        for(int i = 0; i < currentGameMap.size(); i++){
-            if (currentGameMap.get(pos) == currentGameMap.get(i)){
-                guessPath.add(String.valueOf(c +" "+ currentGame.get(i) + " " + pos));
-                currentGame.set(i,c);
+        String input = "Y";
+        boolean noDupe = true;
+        for(int i = 0; i < currentGame.size(); i++){
+            if(c == currentGame.get(i)){
+               noDupe = false;
             }
         }
-        if(currentGame.get(pos) == globalCurrCryptogram.cryptogramPhrase.charAt(pos)){
-            numCorrectGuesses++;
+        if(noDupe){
+            if (currentGame.get(pos) != '_'){
+                Boolean running = true;
+                while(running){
+                    Scanner in2 = new Scanner(System.in);
+                    System.out.println("are you sure you want to override your prior guess in this position? 'Y' for yes 'N' for no");
+                    input = in2.nextLine(); 
+                    if (input.equals("Y")||input.equals("N")){
+                        running = false;
+                        System.out.println(input);
+                        //this is a naughty little boy(idk why but it makes 
+                        //scanner not wait for input and causes a nosuchelementexexption 
+                        //bad little boy==> in2.close();
+                    }else{
+                        System.out.print("Please enter 'Y' or 'N'");
+                        System.out.println(input);
+                    }
+                }
+            }
+            
+            if(input.equals("Y")){
+                for(int i = 0; i < currentGameMap.size(); i++){
+                    if (currentGameMap.get(pos) == currentGameMap.get(i)){
+                        guessPath.add(String.valueOf(c +" "+ currentGame.get(i) + " " + pos));
+                        currentGame.set(i,c);
+                    }
+                }
+                if(currentGame.get(pos) == globalCurrCryptogram.cryptogramPhrase.charAt(pos)){
+                    numCorrectGuesses++;
+                }
+                numGuesses++;
+            }else{
+                System.out.println("guess has not been made");
+            }
+        }else{
+            System.out.println("you have already input that letter, please try again with one you havent used");
         }
-        numGuesses++;
     }
     public void undoLetter(char n, char o, int pos){
         for(int i = 0; i < currentGameMap.size(); i++){
@@ -164,8 +210,12 @@ public class Game{
         }
     }
     public void remLetter(int pos){
-        guessPath.add(String.valueOf('_' +" "+ currentGame.get(pos) +" "+ pos));
-        currentGame.set(pos, '_');
+        for(int i = 0; i < currentGameMap.size(); i++){
+            if (currentGameMap.get(pos) == currentGameMap.get(i)){
+                guessPath.add(String.valueOf('_' +" "+ currentGame.get(i) +" "+ pos));
+                currentGame.set(i, '_');
+            }
+        }
     }
     public void viewFrequencies(){
         System.out.println(Arrays.toString(cryptoGame.getFrequencies()));
@@ -179,6 +229,7 @@ public class Game{
     public void showSolution(){
 
     }
+
     public static void main(String[] args) throws IOException{
         Game G = new Game();
         G.loadPlayer();
