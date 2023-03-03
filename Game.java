@@ -135,7 +135,7 @@ public class Game{
             }
             //Checks if command is rem, runs rem
             else if(data[0].equals("rem")){
-                remLetter(Integer.valueOf(data[1]));
+                remLetter(Integer.valueOf(data[1])-1);
             }
             //Runs if input is of valid size and the pos is of valid value
             else if (Integer.valueOf(data[1]) < currentGameMap.size() && data.length == 2){
