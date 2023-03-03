@@ -1,2 +1,1 @@
-zerkin on main # zbcdefghijklmnopqrstuvwxya
-balls # bacdefghijklmnopqrstuvwxyz
+zerkin on main#balls

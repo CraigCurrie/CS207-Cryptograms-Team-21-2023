@@ -51,7 +51,7 @@ public class Players{
                 }
                 String data = buffer.toString();
                 in.close();
-                Player old = findPlayer(p);
+                Player old = findPlayer(p.username);
                 String oldData = (old.username +" "+ old.accuracy +" "+ old.totalGuesses +" "+ old.cryptogramsPlayed +" "+ old.cryptogramsCompleted);
                 data = data.replaceAll(oldData, (p.username +" "+ p.accuracy +" "+ p.totalGuesses +" "+ p.cryptogramsPlayed +" "+ p.cryptogramsCompleted));
                 try {
@@ -69,7 +69,7 @@ public class Players{
             }
         }
     
-    public Player findPlayer(Player p){
+    public Player findPlayer(String p){
         File myObj = new File("AllPlayers.txt");
         try (Scanner in = new Scanner(myObj)) {
             String[] data = null;
@@ -77,10 +77,9 @@ public class Players{
             while (in.hasNextLine()) {
                 
                 data = in.nextLine().split(" ");
-                Player result = new Player(data[0],Double.valueOf(data[1]),Integer.valueOf(data[2]),Integer.valueOf(data[3]),Integer.valueOf(data[4]));
-                if (data[0].equals(p.username)){ 
+                Player result = new Player(String.valueOf(data[0]),Double.valueOf(data[1]),Integer.valueOf(data[2]),Integer.valueOf(data[3]),Integer.valueOf(data[4]));
+                if (data[0].equals(p)){ 
                     return result;
-                    
                 }                
             }
         }catch (FileNotFoundException e) {
