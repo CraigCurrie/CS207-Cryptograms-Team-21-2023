@@ -54,20 +54,20 @@ public class Game{
     public void loadPlayer(){
         String newPlayerName;
         Scanner in = new Scanner(System.in);
-        System.out.println("please enter your username");
+        System.out.println("Please enter your username");
         newPlayerName = in.nextLine();
         Player p = new Player(newPlayerName,0,0,0,0);
         if (GamePlayers.findPlayer(p) == null){
-            System.out.println("would you like to create a new account? Y or N?");
+            System.out.println("Would you like to create a new account? Y or N?");
             String input = in.nextLine();
             if(input.equals("Y")){
                 GamePlayers.addPlayer(newPlayerName, 100, 0, 0, 0);
                 currentPlayer = GamePlayers.findPlayer(p);
-                System.out.println("new account succesfully created with username- " + newPlayerName);
+                System.out.println("New account succesfully created with username- " + newPlayerName);
             }else if(input.equals("N") ){                    
                 System.out.println("New account has not been made");
             }else{
-                System.out.println("please enter Y or N");
+                System.out.println("Please enter Y or N");
                 }
             
             in.close();
@@ -97,11 +97,11 @@ public class Game{
             System.out.println("CRYPTOGRAM :"+currentGame);
             System.out.println("CYPHER     :"+currentGameJumbled);
             System.out.println("FREQUENCIES:"+currentFreqs);
-            System.out.println("please enter your guess and its position (e.g c 1) enter undo to undo your previous guess, to remove a guess type rem and the position you want to remove (e.g rem 1)");
+            System.out.println("Please enter your guess and its position (e.g c 1).     Enter 'undo' to undo your previous guess.   To remove a guess type 'rem' and the position you want to remove (e.g rem 1)");
             data = in.nextLine().split(" ");
             
             if(data[0].equals("undo")&& guessPath.size() == 0){
-                System.out.println("no guesses avaliable to be undone");
+                System.out.println("No guesses avaliable to be undone");
             }
             else if (data[0].equals("undo")){
                 String[] guessPathData = null;
@@ -109,7 +109,7 @@ public class Game{
                 undoLetter(guessPathData[0].charAt(0), guessPathData[1].charAt(0), Integer.valueOf(guessPathData[2]));
             }
             else if((data[1].matches("^-?\\d+$") == false)){
-                System.out.println("please use the correct formatting for input and correct arguments");
+                System.out.println("Please use the correct formatting for input and correct arguments");
             }
             else if(data[0].equals("rem")){
                 remLetter(Integer.valueOf(data[1]));
@@ -118,7 +118,7 @@ public class Game{
                 enterLetter(data[0].charAt(0),Integer.valueOf(data[1]));
                 if (currentGame.toString().substring(1, 3 * currentGame.size() - 1).replaceAll(", ", "").equals((currentCryptogram.cryptogramPhrase).replaceAll(" ",""))){
                     System.out.println(currentGame);
-                    System.out.println("well done! The cryptogram has been solved!");
+                    System.out.println("Well done! The cryptogram has been solved!");
                     //increases the current Players games completed by 1
                     currentPlayer.incrementCryptogramsCompleted();;
                     //updates the current Players Accuracy
@@ -130,7 +130,7 @@ public class Game{
                 }
             }
             else{
-                System.out.println("please enter a valid position and command/number of command arguments");
+                System.out.println("Please enter a valid position and command/number of command arguments");
             } 
             //test for checking the correct answer check       
             //System.out.println(currentGame.toString().substring(1, 3 * currentGame.size() - 1).replaceAll(", ", "") +" "+ (currentCryptogram.cryptogramPhrase).replaceAll(" ",""));
@@ -172,7 +172,7 @@ public class Game{
                 Boolean running = true;
                 while(running){
                     Scanner in2 = new Scanner(System.in);
-                    System.out.println("are you sure you want to override your prior guess in this position? 'Y' for yes 'N' for no");
+                    System.out.println("Are you sure you want to override your prior guess in this position? 'Y' for yes 'N' for no");
                     input = in2.nextLine(); 
                     if (input.equals("Y")||input.equals("N")){
                         running = false;
@@ -199,10 +199,10 @@ public class Game{
                 }
                 numGuesses++;
             }else{
-                System.out.println("guess has not been made");
+                System.out.println("Guess has not been made");
             }
         }else{
-            System.out.println("you have already input that letter, please try again with one you havent used");
+            System.out.println("You have already input that letter, please try again with one you havent used");
         }
     }
     public void undoLetter(char n, char o, int pos){
