@@ -140,7 +140,7 @@ public class Game{
             //Runs if input is of valid size and the pos is of valid value
             else if (Integer.valueOf(data[1]) < currentGameMap.size() && data.length == 2){
                 //Runs enter letter to add letter to the current cryptogram solution
-                enterLetter(data[0].charAt(0),Integer.valueOf(data[1]));
+                enterLetter(data[0].charAt(0),Integer.valueOf(data[1])-1);
                 //Checks if the guess completed the cryptogram
                 if (currentGame.toString().substring(1, 3 * currentGame.size() - 1).replaceAll(", ", "").equals((currentCryptogram.cryptogramPhrase).replaceAll(" ",""))){
                     //Outputs the correct solution and congradulates player 
