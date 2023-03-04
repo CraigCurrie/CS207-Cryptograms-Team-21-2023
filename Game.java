@@ -6,7 +6,6 @@ public class Game{
     Player currentPlayer;
     Players GamePlayers = new Players();
     Cryptogram currentCryptogram;
-    ArrayList<HashMap<String, String>> guessPath = new ArrayList<HashMap<String, String>>();
     Integer numGuesses = 0;
     Integer numCorrectGuesses = 0;
     HashMap<String, String> PlayerGameMapping = new HashMap<String, String>();
@@ -22,7 +21,7 @@ public class Game{
         //not yet needed
     }
     
-    public void loadPlayer(Scanner in){
+    /*public void loadPlayer(Scanner in){
         String newPlayerName;
         Boolean running = true;
         //Gets players username
@@ -57,101 +56,93 @@ public class Game{
             running = false;
             }
         }
-    }
+    }*/
 
     public void playGame(Scanner in) throws IOException{
         //Gets current Cryptogram
-        currentCryptogram = new Cryptogram();
+        currentCryptogram = generateCryptogram();
         Boolean running = true;
         for(int i = 0; i < currentCryptogram.getGram().size(); i++){
-            PlayerGameMapping.put(currentCryptogram.getGram().get(i), "_");
+            this.PlayerGameMapping.put(currentCryptogram.getGram().get(i), "_");
         }
 
         //increases the current Players games played by 1
-        currentPlayer.incrementCryptogramsPlayed();
+        //currentPlayer.incrementCryptogramsPlayed();
         while(running == true){
             //Output display for user
-            System.out.println("YOUR GUESS :"+PlayerGameMapping);
+            System.out.println("YOUR GUESSES :"+PlayerGameMapping);
             System.out.println("CRYPTOGRAM :"+String.valueOf(currentCryptogram.getGram()));
-            //System.out.println("FREQUENCIES:"+currentCryptogram.getFrequencies());
+            for(int i = 0; i < currentCryptogram.getGram().size(); i++){
+                System.out.print(PlayerGameMapping.get(currentCryptogram.getGram().get(i)) + " ");
+            }
+            System.out.println("\n");
             System.out.println("| Enter a letter and a position to guess (e.g c a).");
-            System.out.println("| Enter 'undo' to undo your previous guess.");
+            System.out.println("| Enter 'undo' and a letter to undo the guess of that letter.");
             String[] data = in.nextLine().split(" ");
 
-            //Checks if command is undo and undo is empty
+            //Checks if command is undo but not followed by a letter
             switch (data[0]) {
                 case "undo":
-                    if(guessPath.size() == 0){
-                        System.out.println("No guesses to be undone. ");
-                    }else{
-                        HashMap<String, String> prevState = guessPath.get(guessPath.size()-1);
-                        undoLetter(prevState);
-                    }
+                        undoLetter(data[1]);
                     break;
             
                 default:
-                    //boolean valid = false;
-                    //for(int i = 0; i < currentCryptogram.getBet().length(); i++){
-                        //if(data[0] == String.valueOf(currentCryptogram.getBet().charAt(i))){
-                            //valid = true;
-                        //}
-                    //}
-                    
-                    //if(valid){
+                    //Checks if the input is a letter in the cryptogram
+                    boolean valid = false;
+                    for(String i : PlayerGameMapping.keySet()){
+                        if(data[0].equals(i)){
+                            valid = true;
+                        }
+                    }
+                    if(valid){
                         boolean complete = enterLetter(data[0], data[1], in);
                         if(complete){
-                            if(currentCryptogram.getGram().toString() == currentCryptogram.getPhrase().toString()){
+                            if(currentCryptogram.getGram().toString().equals(currentCryptogram.getPhrase().toString())){
                                 numCorrectGuesses ++;
                                 numGuesses ++;
                                 System.out.println(currentCryptogram.getPhrase());
                                 System.out.println("Well done! The cryptogram has been solved!");
-                                currentPlayer.incrementCryptogramsCompleted();
-                                currentPlayer.updateAccuracy((numCorrectGuesses/numGuesses)*100);
-                                GamePlayers.savePlayer(currentPlayer);
+                                //currentPlayer.incrementCryptogramsCompleted();
+                                //currentPlayer.updateAccuracy((numCorrectGuesses/numGuesses)*100);
+                                //GamePlayers.savePlayer(currentPlayer);
                                 running = false;
                             }else{
                                 System.out.println("Your current guess is inncorrect, try again! ");
                                 numGuesses ++;
                             }
                         }
-                    //}else{
-                        //System.out.println("Invalid input. Try again.");
-                    //}
+                    }else{
+                        System.out.println("Invalid input. Try again.");
+                    }
                     break;
             }
         }
     }
 
-    public boolean enterLetter(String guess, String target, Scanner in){
+    public boolean enterLetter(String target, String guess, Scanner in){
         boolean full = true;
         //Checks if that character has already been entered
-        for(String i: PlayerGameMapping.values()){
-            if(guess == i){
-                System.out.println("That character has already been entered. ");
+        for(String i : PlayerGameMapping.values()){
+            if(guess.equals(i)){
+                System.out.println("That character has already been guessed, for the letter: " + i);
                 return false;
             }
         }
-        if(PlayerGameMapping.get(target) != "_"){
+        if(!PlayerGameMapping.get(target).equals("_")){
             override(guess, target, in);
         }else{
             for(String i : PlayerGameMapping.keySet()){
-                if(i == target){
-                    PlayerGameMapping.put(i, guess);
-                    guessPath.add(PlayerGameMapping);
+                if(target.equals(i)){
+                    this.PlayerGameMapping.put(i, guess);
                 }
             }
         }
-        for(String i : PlayerGameMapping.values()){
-            if(i == "_"){
-            full = false;
-            }
-        }
+        full = !PlayerGameMapping.containsValue("_");
         return full;
     }
 
-
     public void override(String input, String origin, Scanner in){
-        //Checks if the pos to be entered into is empty and if so asks if they want to override it
+        //When the letter being guessed for is not empty, asks if player wants to override prior guess
         boolean running = true;
         while(running){
             System.out.println("Are you sure you want to override your prior guess in this position? 'Y' or 'N': ");
@@ -160,8 +151,7 @@ public class Game{
                 case "Y":    
                     for(String i : PlayerGameMapping.keySet()){
                         if(i == origin){
-                            PlayerGameMapping.put(i, input);
-                            guessPath.add(PlayerGameMapping);
+                            this.PlayerGameMapping.put(i, input);
                         }
                     }
                     running = false;
@@ -179,12 +169,18 @@ public class Game{
         }
     }
 
-    public void undoLetter(HashMap<String, String> state){
-        //Uses the guessPath var to see last guess/rem and undoes it
-        for(int i = 0; i < PlayerGameMapping.size(); i++){
-            PlayerGameMapping = state;
+    public void undoLetter(String target){
+        for(String i : PlayerGameMapping.keySet()){
+            if(i == target){
+                this.PlayerGameMapping.put(i, "_");
             }
         }
+    }
+
+    public Cryptogram generateCryptogram() throws IOException{
+        Cryptogram c = new Cryptogram();
+        return c;
+    }
 
     public void viewFrequencies(){
         //not yet needed
@@ -205,7 +201,7 @@ public class Game{
     public static void main(String[] args) throws IOException{
         Scanner in = new Scanner(System.in);
         Game g = new Game();
-        g.loadPlayer(in);
+        //g.loadPlayer(in);
         g.playGame(in);
         in.close();
     }

@@ -4,11 +4,12 @@ import java.util.*;
 public class Cryptogram{
 
     private Random rand = new Random();
-    private String phrase;
-    private char[] cryptogramAlphabet = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+    private char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+    private char[] cryptogramAlphabet = new char[26];
+    private String phrase = "";
     private int[] freqs = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    private String Alphabet = "abcdefghijklmnopqrstuvwxyz";
     private ArrayList<String> jumble = new ArrayList<String>();
+
 
     public Cryptogram() throws IOException{
         File myObj = new File("AllCryptos.txt");
@@ -28,18 +29,18 @@ public class Cryptogram{
         if(data.length == 0){
             throw new IOException("No phrases found.");
         }
-        for(int i = 0; i < Alphabet.length(); i++){
-            int x = rand.nextInt(Alphabet.length());
-            cryptogramAlphabet[i] = Alphabet.charAt(x);
+
+        char[] tempalphabet = alphabet;
+        for(int i = 0; i < 26; i++){
+            int x = rand.nextInt(26 - i);
+            cryptogramAlphabet[i] = tempalphabet[x];
+            tempalphabet[x] = tempalphabet[25-i];
         }
 
-        for(int i = 0; i< phrase.length(); i++){
-            jumble.add(null);
-        }
         for(int i = 0; i < phrase.length(); i++){
-            for(int j = 0; j < Alphabet.length(); j++){
-                if(phrase.charAt(i) == Alphabet.charAt(j)){
-                    jumble.set(i, String.valueOf(cryptogramAlphabet[j]));
+            for(int j = 0; j < alphabet.length; j++){
+                if(phrase.charAt(i) == alphabet[j]){
+                    jumble.add(String.valueOf(cryptogramAlphabet[j]));
                 }
             }
         }
@@ -51,8 +52,8 @@ public class Cryptogram{
         
     }
 
-    public String getBet(){
-        return Alphabet;
+    public char[] getBet(){
+        return alphabet;
     }
 
     public String getPhrase(){
@@ -68,18 +69,25 @@ public class Cryptogram{
     }
 
     public ArrayList<String> getGram(){
-        return jumble;
+        //return jumble;
+        ArrayList<String> tempJumb = new ArrayList<String>();
+        tempJumb.add("h");
+        tempJumb.add("e");
+        tempJumb.add("l");
+        tempJumb.add("l");
+        tempJumb.add("o");
+        return tempJumb;
     }
 
-    public void addLetter(char letter){
+    /*public void addLetter(char letter){
         int x = 0;
-        while(true){
-            if(letter == Alphabet.charAt(x)){
+        while (x < alphabet.length) {
+            if (letter == alphabet[x]) {
                 freqs[x]++;
                 return;
-            }else{
-                x++;
             }
+            x++;
         }
-    }
+        
+    }*/
 }
