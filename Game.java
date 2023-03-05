@@ -77,13 +77,18 @@ public class Game{
             }
             System.out.println("\n");
             System.out.println("| Enter a letter and a position to guess (e.g c a).");
-            System.out.println("| Enter 'undo' and a letter to undo the guess of that letter.");
+            System.out.println("| Enter 'undo' and a letter to undo the guess of that letter. (eg undo c)");
             String[] data = in.nextLine().split(" ");
+   
 
             //Checks if command is undo but not followed by a letter
             switch (data[0]) {
                 case "undo":
+                    if(data.length == 2){
                         undoLetter(data[1]);
+                    }else{
+                        System.out.println("Invalid input. Try again.");
+                    }
                     break;
             
                 default:
@@ -170,11 +175,11 @@ public class Game{
     }
 
     public void undoLetter(String target){
-        for(String i : PlayerGameMapping.keySet()){
-            if(i == target){
-                this.PlayerGameMapping.put(i, "_");
-            }
+        if (PlayerGameMapping.containsKey(target)){
+            PlayerGameMapping.put(target, "_");
         }
+        
+
     }
 
     public Cryptogram generateCryptogram() throws IOException{
