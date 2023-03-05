@@ -1,16 +1,15 @@
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Random;
 import java.util.HashMap;
 import java.util.ArrayList;
 
 
 public class LetterCryptogram extends Cryptogram{    
-    public LetterCryptogram() throws FileNotFoundException, IOException{
+    public LetterCryptogram() throws FileNotFoundException{
         this("AllCryptos.txt");
     }
 
-    public LetterCryptogram(String filename) throws FileNotFoundException, IOException{
+    public LetterCryptogram(String filename) throws FileNotFoundException{
         setPhrase(filename);
         cryptogramAlphabet = setCryptogramAlphabet();
     }
