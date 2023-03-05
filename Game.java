@@ -5,7 +5,7 @@ public class Game{
     
     Player currentPlayer;
     Players GamePlayers = new Players();
-    LetterCryptogram currentCryptogram;
+    Cryptogram currentCryptogram;
     Integer numGuesses = 0;
     Integer numCorrectGuesses = 0;
     HashMap<String, String> PlayerGameMapping = new HashMap<String, String>();
@@ -59,8 +59,29 @@ public class Game{
     }*/
 
     public void playGame(Scanner in) throws IOException{
-        //Gets current Cryptogram
-        currentCryptogram = generateCryptogram();
+        System.out.println("Welcome to Cryptogram!");
+        System.out.println("Enter 'number' to play a number cryptogram.");
+        System.out.println("Enter 'letter' to play a letter cryptogram.");
+        System.out.println("Enter 'exit' to exit the game.");
+        String inp = in.nextLine();
+
+        switch(inp){
+            case "number":
+                currentCryptogram = generateCryptogram(true);
+                break;
+            case "letter":
+                currentCryptogram = generateCryptogram(false);
+                break;
+            case "exit":
+                System.out.println("Exiting program...");
+                System.exit(0);
+                break;
+            default:
+                System.out.println("Invalid input. Try again.");
+                playGame(in);
+                break;
+        }
+
         Boolean running = true;
         for(int i = 0; i < currentCryptogram.getGram().length; i++){
             PlayerGameMapping.put(currentCryptogram.getGram()[i], "_");
@@ -69,18 +90,14 @@ public class Game{
         //increases the current Players games played by 1
         //currentPlayer.incrementCryptogramsPlayed();
         while(running == true){
-            List<String> guessList = new ArrayList<String>();
-            for(int i = 0; i < currentCryptogram.getGram().size(); i++){
-                guessList.add(PlayerGameMapping.get(currentCryptogram.getGram().get(i)) + " ");
-            }
             //Output display for user
-            System.out.println("YOUR GUESSES :"+PlayerGameMapping);
+            System.out.println("YOUR GUESSES: "+PlayerGameMapping);
             System.out.print("CURRENT GUESS: ");
             for(int i = 0; i < currentCryptogram.getGram().length; i++){
-                System.out.print(PlayerGameMapping.get(currentCryptogram.getGram()[i]) + " ");
+                System.out.print(PlayerGameMapping.get(currentCryptogram.getGram()[i]) + ", ");
             }
             System.out.println();
-            System.out.println("CRYPTOGRAM: "+Arrays.toString(currentCryptogram.getGram()));
+            System.out.println("CRYPTOGRAM:   "+Arrays.toString(currentCryptogram.getGram()));
             System.out.println("| Enter a letter and a position to guess (e.g c a).");
             System.out.println("| Enter 'undo' and a letter to undo the guess of that letter. (eg undo c)");
             System.out.println("| Enter 'exit' to exit the game.");
@@ -114,8 +131,8 @@ public class Game{
                         if(complete){
                             boolean correct = true;
                             //Checks if the cryptogram has been solved
-                            for (String i : PlayerGameMapping.keySet()){
-                                if(!PlayerGameMapping.get(i).equals(i)){
+                            for(int i = 0; i < currentCryptogram.getPhrase().length(); i++){
+                                if(!String.valueOf(currentCryptogram.getPhrase().charAt(i)).equals(PlayerGameMapping.get(currentCryptogram.getGram()[i]))){
                                     correct = false;
                                 }
                             }
@@ -169,8 +186,8 @@ public class Game{
             switch (ans){
                 case "Y":    
                     for(String i : PlayerGameMapping.keySet()){
-                        if(i == origin){
-                            this.PlayerGameMapping.put(i, input);
+                        if(origin.equals(i)){
+                            PlayerGameMapping.put(i, input);
                         }
                     }
                     running = false;
@@ -197,10 +214,16 @@ public class Game{
 
     }
 
-    public LetterCryptogram generateCryptogram() throws IOException{
-        LetterCryptogram c = new LetterCryptogram();
-        c.genGram();
-        return c;
+    public Cryptogram generateCryptogram(boolean option) throws IOException{
+        if(option){
+            NumberCryptogram c = new NumberCryptogram();
+            c.genGram();
+            return c;
+        }else{
+            LetterCryptogram c = new LetterCryptogram();
+            c.genGram();
+            return c;
+        }
     }
 
     public void viewFrequencies(){
