@@ -71,11 +71,12 @@ public class Game{
         while(running == true){
             //Output display for user
             System.out.println("YOUR GUESSES :"+PlayerGameMapping);
-            System.out.println("CRYPTOGRAM :"+Arrays.toString(currentCryptogram.getGram()));
+            System.out.print("CURRENT GUESS: ");
             for(int i = 0; i < currentCryptogram.getGram().length; i++){
                 System.out.print(PlayerGameMapping.get(currentCryptogram.getGram()[i]) + " ");
             }
-            System.out.println("\n");
+            System.out.println();
+            System.out.println("CRYPTOGRAM: "+Arrays.toString(currentCryptogram.getGram()));
             System.out.println("| Enter a letter and a position to guess (e.g c a).");
             System.out.println("| Enter 'undo' and a letter to undo the guess of that letter. (eg undo c)");
             String[] data = in.nextLine().split(" ");
