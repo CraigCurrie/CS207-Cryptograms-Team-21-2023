@@ -15,11 +15,12 @@ public abstract class Cryptogram{
         String[] data = {};
         Random rand = new Random();
         try (Scanner in = new Scanner(myObj)){
+            if(!in.hasNextLine()){ //no phrases found
+                throw new IOException("No phrases found.");
+            }
             while (in.hasNextLine()){
                 data = in.nextLine().split("#");
-                if(data.length == 0){ //no phrases found
-                    throw new IOException("No phrases found.");
-                }
+                
                 int x = rand.nextInt(data.length);
                 phrase = data[x].replaceAll(" ", "");
             }

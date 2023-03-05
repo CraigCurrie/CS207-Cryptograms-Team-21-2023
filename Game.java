@@ -144,7 +144,6 @@ public class Game{
                                 running = false;
                             }else{
                                 System.out.println("Your current guess is inncorrect, try again! ");
-                                numGuesses ++;
                             }
                         }
                     }else{
