@@ -1,93 +1,54 @@
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Scanner;
+import java.util.Random;
 
-public class Cryptogram{
+public abstract class Cryptogram{
+    protected String phrase = "";
+    protected HashMap<String, String> cryptogramAlphabet = new HashMap<String, String>();
+    protected String[] encrypted = {};
 
-    private Random rand = new Random();
-    private char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-    private char[] cryptogramAlphabet = new char[26];
-    private String phrase = "";
-    private int[] freqs = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    private ArrayList<String> jumble = new ArrayList<String>();
-
-
-    public Cryptogram() throws IOException{
-        File myObj = new File("AllCryptos.txt");
+    public void setPhrase(String filename) throws IOException{
+        File myObj = new File(filename);
         String[] data = {};
+        Random rand = new Random();
         try (Scanner in = new Scanner(myObj)){
             while (in.hasNextLine()){
                 data = in.nextLine().split("#");
+                if(data.length == 0){ //no phrases found
+                    throw new IOException("No phrases found.");
+                }
                 int x = rand.nextInt(data.length);
-                phrase = data[x];
+                phrase = data[x].replaceAll(" ", "");
             }
         } catch (FileNotFoundException e){
             System.out.println("File not found.");
             e.printStackTrace();
         }
-        phrase = phrase.replaceAll(" ", "");
-        //throws error when no phrases in file
-        if(data.length == 0){
-            throw new IOException("No phrases found.");
-        }
-
-        char[] tempalphabet = alphabet;
-        for(int i = 0; i < 26; i++){
-            int x = rand.nextInt(26 - i);
-            cryptogramAlphabet[i] = tempalphabet[x];
-            tempalphabet[x] = tempalphabet[25-i];
-        }
-
-        for(int i = 0; i < phrase.length(); i++){
-            for(int j = 0; j < alphabet.length; j++){
-                if(phrase.charAt(i) == alphabet[j]){
-                    jumble.add(String.valueOf(cryptogramAlphabet[j]));
-                }
-            }
-        }
-        
-        //generate array of frequencies of letters within the phrase
-        //for(int i = 0; i < jumble.length(); i++){
-            //addLetter(jumble.charAt(i));
-        //}
-        
-    }
-
-    public char[] getBet(){
-        return alphabet;
     }
 
     public String getPhrase(){
         return phrase;
     }
 
-    public char[] getCryptogramAlphabet(){
-        return cryptogramAlphabet;
-    } 
-
-    public int[] getFrequencies(){
-        return freqs;
-    }
-
-    public ArrayList<String> getGram(){
-        //return jumble;
-        ArrayList<String> tempJumb = new ArrayList<String>();
-        tempJumb.add("h");
-        tempJumb.add("e");
-        tempJumb.add("l");
-        tempJumb.add("l");
-        tempJumb.add("o");
-        return tempJumb;
-    }
-
-    /*public void addLetter(char letter){
-        int x = 0;
-        while (x < alphabet.length) {
-            if (letter == alphabet[x]) {
-                freqs[x]++;
-                return;
+    public void genGram(){
+        encrypted = new String[phrase.length()];
+        for(int i = 0; i < phrase.length(); i++){
+            for(String j : cryptogramAlphabet.keySet()){
+                if(String.valueOf(phrase.charAt(i)).equals(j)){
+                    encrypted[i] = cryptogramAlphabet.get(j);
+                }
             }
-            x++;
         }
-        
-    }*/
+    }
+
+    public String[] getGram(){
+        return encrypted;
+    }
+
+    public HashMap<String, String> getCryptogramAlphabet(){
+        return cryptogramAlphabet;
+    }
 }
