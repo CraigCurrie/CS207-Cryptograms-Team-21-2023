@@ -69,10 +69,6 @@ public class Game{
         //increases the current Players games played by 1
         //currentPlayer.incrementCryptogramsPlayed();
         while(running == true){
-            List<String> guessList = new ArrayList<String>();
-            for(int i = 0; i < currentCryptogram.getGram().size(); i++){
-                guessList.add(PlayerGameMapping.get(currentCryptogram.getGram().get(i)) + " ");
-            }
             //Output display for user
             System.out.println("YOUR GUESSES :"+PlayerGameMapping);
             System.out.print("CURRENT GUESS: ");
@@ -114,8 +110,8 @@ public class Game{
                         if(complete){
                             boolean correct = true;
                             //Checks if the cryptogram has been solved
-                            for (String i : PlayerGameMapping.keySet()){
-                                if(!PlayerGameMapping.get(i).equals(i)){
+                            for(int i = 0; i < currentCryptogram.getPhrase().length(); i++){
+                                if(currentCryptogram.getPhrase().equals(PlayerGameMapping.get(currentCryptogram.getGram()[i]))){
                                     correct = false;
                                 }
                             }
