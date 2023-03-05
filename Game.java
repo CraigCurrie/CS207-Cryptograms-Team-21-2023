@@ -165,8 +165,8 @@ public class Game{
             switch (ans){
                 case "Y":    
                     for(String i : PlayerGameMapping.keySet()){
-                        if(i == origin){
-                            this.PlayerGameMapping.put(i, input);
+                        if(origin.equals(i)){
+                            PlayerGameMapping.put(i, input);
                         }
                     }
                     running = false;
