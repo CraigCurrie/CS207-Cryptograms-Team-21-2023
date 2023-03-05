@@ -69,6 +69,10 @@ public class Game{
         //increases the current Players games played by 1
         //currentPlayer.incrementCryptogramsPlayed();
         while(running == true){
+            List<String> guessList = new ArrayList<String>();
+            for(int i = 0; i < currentCryptogram.getGram().size(); i++){
+                guessList.add(PlayerGameMapping.get(currentCryptogram.getGram().get(i)) + " ");
+            }
             //Output display for user
             System.out.println("YOUR GUESSES :"+PlayerGameMapping);
             System.out.println("CRYPTOGRAM :"+String.valueOf(currentCryptogram.getGram()));
@@ -78,6 +82,7 @@ public class Game{
             System.out.println("\n");
             System.out.println("| Enter a letter and a position to guess (e.g c a).");
             System.out.println("| Enter 'undo' and a letter to undo the guess of that letter. (eg undo c)");
+            System.out.println("| Enter 'exit' to exit the game.");
             String[] data = in.nextLine().split(" ");
    
 
@@ -89,6 +94,10 @@ public class Game{
                     }else{
                         System.out.println("Invalid input. Try again.");
                     }
+                    break;
+                case "exit":
+                    System.out.println("Exiting program...");
+                    running = false;
                     break;
             
                 default:
@@ -102,10 +111,14 @@ public class Game{
                     if(valid){
                         boolean complete = enterLetter(data[0], data[1], in);
                         if(complete){
-                            if(currentCryptogram.getGram().toString().equals(currentCryptogram.getPhrase().toString())){
-                                numCorrectGuesses ++;
-                                numGuesses ++;
-                                System.out.println(currentCryptogram.getPhrase());
+                            boolean correct = true;
+                            //Checks if the cryptogram has been solved
+                            for (String i : PlayerGameMapping.keySet()){
+                                if(!PlayerGameMapping.get(i).equals(i)){
+                                    correct = false;
+                                }
+                            }
+                            if(correct){
                                 System.out.println("Well done! The cryptogram has been solved!");
                                 //currentPlayer.incrementCryptogramsCompleted();
                                 //currentPlayer.updateAccuracy((numCorrectGuesses/numGuesses)*100);
@@ -173,6 +186,7 @@ public class Game{
             }
         }
     }
+
 
     public void undoLetter(String target){
         if (PlayerGameMapping.containsKey(target)){
