@@ -5,7 +5,7 @@ public class Game{
     
     Player currentPlayer;
     Players GamePlayers = new Players();
-    Cryptogram currentCryptogram;
+    LetterCryptogram currentCryptogram;
     Integer numGuesses = 0;
     Integer numCorrectGuesses = 0;
     HashMap<String, String> PlayerGameMapping = new HashMap<String, String>();
@@ -62,8 +62,8 @@ public class Game{
         //Gets current Cryptogram
         currentCryptogram = generateCryptogram();
         Boolean running = true;
-        for(int i = 0; i < currentCryptogram.getGram().size(); i++){
-            this.PlayerGameMapping.put(currentCryptogram.getGram().get(i), "_");
+        for(int i = 0; i < currentCryptogram.getGram().length; i++){
+            PlayerGameMapping.put(currentCryptogram.getGram()[i], "_");
         }
 
         //increases the current Players games played by 1
@@ -75,11 +75,12 @@ public class Game{
             }
             //Output display for user
             System.out.println("YOUR GUESSES :"+PlayerGameMapping);
-            System.out.println("CRYPTOGRAM :"+String.valueOf(currentCryptogram.getGram()));
-            for(int i = 0; i < currentCryptogram.getGram().size(); i++){
-                System.out.print(PlayerGameMapping.get(currentCryptogram.getGram().get(i)) + " ");
+            System.out.print("CURRENT GUESS: ");
+            for(int i = 0; i < currentCryptogram.getGram().length; i++){
+                System.out.print(PlayerGameMapping.get(currentCryptogram.getGram()[i]) + " ");
             }
-            System.out.println("\n");
+            System.out.println();
+            System.out.println("CRYPTOGRAM: "+Arrays.toString(currentCryptogram.getGram()));
             System.out.println("| Enter a letter and a position to guess (e.g c a).");
             System.out.println("| Enter 'undo' and a letter to undo the guess of that letter. (eg undo c)");
             System.out.println("| Enter 'exit' to exit the game.");
@@ -196,8 +197,9 @@ public class Game{
 
     }
 
-    public Cryptogram generateCryptogram() throws IOException{
-        Cryptogram c = new Cryptogram();
+    public LetterCryptogram generateCryptogram() throws IOException{
+        LetterCryptogram c = new LetterCryptogram();
+        c.genGram();
         return c;
     }
 
