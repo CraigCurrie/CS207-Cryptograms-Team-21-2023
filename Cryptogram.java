@@ -1,42 +1,55 @@
-public class Cryptogram{
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Scanner;
+import java.util.Random;
 
-    String cryptogramPhrase;
-    String cypher;
-    int[] freqs = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    String Alphabet = "abcdefghijklmnopqrstuvwxyz";
+public abstract class Cryptogram{
+    protected String phrase = "";
+    protected HashMap<String, String> cryptogramAlphabet = new HashMap<String, String>();
+    protected String[] encrypted = {};
 
-    public Cryptogram(String phrase, String cryptogramAlphabet){
-        cryptogramPhrase = phrase;
-        cypher = cryptogramAlphabet;
-        //generate array of frequencies of letters within the phrase
-        for(int i = 0; i < cryptogramPhrase.length(); i++){
-            addLetter(cryptogramPhrase.charAt(i));
+    public void setPhrase(String filename){
+        File myObj = new File(filename);
+        String[] data = {};
+        Random rand = new Random();
+        try (Scanner in = new Scanner(myObj)){
+            if(!in.hasNextLine()){ //no phrases found
+                System.out.println("No phrases found.");
+                System.exit(0);
+            }
+            while (in.hasNextLine()){
+                data = in.nextLine().split("#");
+                
+                int x = rand.nextInt(data.length);
+                phrase = data[x].replaceAll(" ", "");
+            }
+        } catch (FileNotFoundException e){
+            System.out.println("File not found.");
+            e.printStackTrace();
         }
     }
 
     public String getPhrase(){
-        return cryptogramPhrase;
+        return phrase;
     }
 
-    public String getCypher(){
-        return cypher;
-    } 
-
-    public int[] getFrequencies(){
-        return freqs;
-    }
-
-    public void addLetter(char letter){
-        int x = 0;
-        while(true){
-            if(letter == ' '){
-                return;
-            }else if(letter == Alphabet.charAt(x)){
-                freqs[x]++;
-                return;
-            }else{
-                x++;
+    public void genGram(){
+        encrypted = new String[phrase.length()];
+        for(int i = 0; i < phrase.length(); i++){
+            for(String j : cryptogramAlphabet.keySet()){
+                if(String.valueOf(phrase.charAt(i)).equals(j)){
+                    encrypted[i] = cryptogramAlphabet.get(j);
+                }
             }
         }
+    }
+
+    public String[] getGram(){
+        return encrypted;
+    }
+
+    public HashMap<String, String> getCryptogramAlphabet(){
+        return cryptogramAlphabet;
     }
 }
