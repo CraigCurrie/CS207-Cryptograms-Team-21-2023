@@ -1,8 +1,5 @@
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Random;
@@ -17,12 +14,10 @@ public abstract class Cryptogram{
         String[] data = {};
         Random rand = new Random();
         try (Scanner in = new Scanner(myObj)){
-            BufferedReader br = new BufferedReader(new FileReader(filename));
-            if(br.readLine() == null){ //no phrases found
+            if(!in.hasNextLine()){ //no phrases found
                 System.out.println("No phrases found.");
                 System.exit(0);
             }
-            br.close();
             while (in.hasNextLine()){
                 data = in.nextLine().split("#");
                 
@@ -31,9 +26,6 @@ public abstract class Cryptogram{
             }
         } catch (FileNotFoundException e){
             System.out.println("File not found.");
-            e.printStackTrace();
-        }
-        catch (IOException e) {
             e.printStackTrace();
         }
     }
