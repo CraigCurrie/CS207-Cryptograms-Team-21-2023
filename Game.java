@@ -2,12 +2,11 @@ import java.io.IOException;
 import java.util.*;
 
 public class Game{
-    
-    Player currentPlayer;
+    int numGuesses = 0;
+    int numCorrect = 0;
     Players GamePlayers = new Players();
+    Player currentPlayer;
     Cryptogram currentCryptogram;
-    Integer numGuesses = 0;
-    Integer numCorrectGuesses = 0;
     
     //public Game(Player p, String CryptType){
     //}
@@ -20,47 +19,49 @@ public class Game{
         //not yet needed
     }
     
-    /*public void loadPlayer(Scanner in){
-        String newPlayerName;
+    public void loadPlayer(Scanner in){
         Boolean running = true;
         //Gets players username
         System.out.println("Please enter your username: ");
-        newPlayerName = in.nextLine();
-        //If player cannot be found asks if they would like to create a new account using that username
-        while(running){
-            if (GamePlayers.findPlayer(newPlayerName) == null){
-                System.out.println("Would you like to create a new account using the username you entered? 'Y' or 'N'? ");
-                String input = in.nextLine();
-                //If yes, adds the account to allPlaters.txt
-                if(input.equals("Y")){
-                    //Initializes new players stats
-                    GamePlayers.addPlayer(newPlayerName, 100, 0, 0, 0);
-                    currentPlayer = GamePlayers.findPlayer(newPlayerName);
-                    System.out.println("New account succesfully created with username: " + newPlayerName);
-                    running = false;
-                }else if(input.equals("N") ){  
-                    //Lets user know that since no account is used their stats wont be saved
-                    System.out.println("New account has not been made, stats will not be saved");
-                    running = false;
-                    currentPlayer = GamePlayers.findPlayer("guest");
-                }else{
-                    //if input is not 'Y' or 'N'
-                    System.out.println("Invalid input. Enter 'Y' or 'N': ");
-                    }
-            }   
-            //Informs user that thier account was loaded
-            else{
-            System.out.println("Account successfully loaded.");
-            currentPlayer = GamePlayers.findPlayer(newPlayerName);
-            running = false;
+        String input = in.nextLine();
+        if (GamePlayers.findPlayer(input) == null){ //this can eval true for no player AND no file
+            System.out.println("Would you like to create a new account using the username you entered? 'Y' or 'N'? ");
+            String inputII = in.nextLine();
+            while(running){
+                //If yes, adds the account to allPlayers.txt
+                switch(inputII){
+                    case "Y":
+                        //Initializes new players stats
+                        GamePlayers.addPlayer(input, 100, 0, 0, 0);
+                        currentPlayer = GamePlayers.findPlayer(input);
+                        System.out.println("New account succesfully created with username: " + input);
+                        running = false;
+                    break;
+
+                    case "N": 
+                        currentPlayer = GamePlayers.findPlayer("guest");
+                        System.out.println("New account has not been made, stats will not be saved");
+                        running = false;
+                    break;
+                        
+                    default:
+                        //if input is not 'Y' or 'N'
+                        System.out.println("Invalid input. Enter 'Y' or 'N': ");
+                        inputII = in.nextLine();
+                    break;
+                }
             }
+        }else{
+            currentPlayer = GamePlayers.findPlayer(input);
+            System.out.println("Account successfully loaded.");
         }
-    }*/
+    }
 
     public void playGame(Scanner in) throws IOException{
         System.out.println("Welcome to Cryptogram!");
         System.out.println("Enter 'number' to play a number cryptogram.");
         System.out.println("Enter 'letter' to play a letter cryptogram.");
+        System.out.println("Enter 'leaderboards' to view all player stats. ");
         System.out.println("Enter 'exit' to exit the game.");
         String inp = in.nextLine();
 
@@ -75,15 +76,16 @@ public class Game{
                 System.out.println("Exiting program...");
                 System.exit(0);
                 break;
+            case "leaderboards":
+                //WIP
+                break;
             default:
                 System.out.println("Invalid input. Try again.");
                 playGame(in);
                 break;
         }
-
         Boolean running = true;
-        //increases the current Players games played by 1
-        //currentPlayer.incrementCryptogramsPlayed();
+        currentPlayer.incrementCryptogramsPlayed();
         while(running == true){
             //Output display for user
             System.out.println("YOUR GUESSES: "+currentCryptogram.getGuesses());
@@ -93,13 +95,11 @@ public class Game{
             }
             System.out.println();
             System.out.println("CRYPTOGRAM:   "+Arrays.toString(currentCryptogram.getGram()));
-            System.out.println("| Enter a letter and a position to guess (e.g c a).");
+            System.out.println("| Enter a letter and a position to guess (e.g c a or 3 a).");
             System.out.println("| Enter 'undo' and a letter to undo the guess of that letter. (eg undo c)");
             System.out.println("| Enter 'exit' to exit the game.");
             String[] data = in.nextLine().split(" ");
-   
 
-            //Checks if command is undo but not followed by a letter
             switch (data[0]) {
                 case "undo":
                     if(data.length == 2){
@@ -107,19 +107,33 @@ public class Game{
                     }else{
                         System.out.println("Invalid input. Try again.");
                     }
-                    break;
+                break;
+
                 case "exit":
                     System.out.println("Exiting program...");
                     running = false;
-                    break;
+                break;
             
                 default:
-                    //Checks if the input is a letter in the cryptogram
                     running = currentCryptogram.enterLetter(data[0], data[1], in);
-                    break;
+                    if(!running){
+                        numGuesses++;
+                        numCorrect++;
+                    }else{
+                        numGuesses++;
+                        if(currentCryptogram.getGuesses().get(data[0]).equals(currentCryptogram.getCryptogramAlphabet().get(data[0]))){
+                            numCorrect++;
+                        }
+                    }
+                break;
             }
         }
-        //reached once cryptogram is solved, update players stats
+        //Game over
+        currentPlayer.incrementCryptogramsCompleted();
+        currentPlayer.updateTotalGuesses(numGuesses);
+        double gameAccuracy = (((double)numCorrect)/numGuesses) * 100.0;
+        currentPlayer.updateAccuracy(gameAccuracy);
+        GamePlayers.savePlayer(currentPlayer);
     }
 
     public Cryptogram generateCryptogram(boolean option) throws IOException{
@@ -153,7 +167,7 @@ public class Game{
     public static void main(String[] args) throws IOException{
         Scanner in = new Scanner(System.in);
         Game g = new Game();
-        //g.loadPlayer(in);
+        g.loadPlayer(in);
         g.playGame(in);
         in.close();
     }

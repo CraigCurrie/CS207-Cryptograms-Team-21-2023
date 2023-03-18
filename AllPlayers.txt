@@ -1,6 +1,6 @@
-kyle 100.0 0 0 0
-bill 31.75 0 1 1
-craig 100.0 0 0 0
+kyle 50.0 0 0 0
+bill 100.0 0 0 0
+craig 0.0 0 6 6
 bob 100.0 0 0 0
 bobby 100.0 0 0 0
 mark 100.0 0 0 0

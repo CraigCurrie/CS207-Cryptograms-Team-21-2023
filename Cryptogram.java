@@ -6,8 +6,8 @@ import java.util.Random;
 
 public abstract class Cryptogram{
     protected String phrase = "";
-    protected HashMap<String, String> cryptogramAlphabet = new HashMap<String, String>();
     protected String[] encrypted = {};
+    protected HashMap<String, String> cryptogramAlphabet = new HashMap<String, String>();
     protected HashMap<String, String> guesses = new HashMap<String,String>();
 
     public void setPhrase(String filename){
@@ -90,14 +90,14 @@ public abstract class Cryptogram{
             full = !guesses.containsValue("_");
             
             if(full){
-                boolean correct = true;
+                boolean allCorrect = true;
                 //Checks if the cryptogram has been solved
                 for(int i = 0; i < phrase.length(); i++){
                     if(!String.valueOf(phrase.charAt(i)).equals(guesses.get(encrypted[i]))){
-                        correct = false;
+                        allCorrect = false;
                     }
                 }
-                if(correct){
+                if(allCorrect){
                     System.out.println("Well done! The cryptogram has been solved!");
                     return false;
                 }else{

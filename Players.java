@@ -16,8 +16,7 @@ public class Players{
         try (Scanner in = new Scanner(myObj)) {
             String[] data = null;
             
-            while (in.hasNextLine()) {
-                
+            while (in.hasNextLine()){
                 data = in.nextLine().split(" ");
                 //(data[0],Integer.valueOf(data[1]),Integer.valueOf(data[2]),Integer.valueOf(data[3]),Integer.valueOf(data[4]));
                 allPlayers.add(new Player(data[0],Integer.valueOf(data[1]),Integer.valueOf(data[2]),Integer.valueOf(data[3]),Integer.valueOf(data[4])));
@@ -43,7 +42,7 @@ public class Players{
         }
     }
 
-    public void savePlayer(Player p){;
+    public void savePlayer(Player p){
             try (Scanner in = new Scanner(new File("AllPlayers.txt"))) {
                 StringBuffer buffer = new StringBuffer();
                 while (in.hasNextLine()){
@@ -73,21 +72,19 @@ public class Players{
         File myObj = new File("AllPlayers.txt");
         try (Scanner in = new Scanner(myObj)) {
             String[] data = null;
-        
             while (in.hasNextLine()) {
-                
                 data = in.nextLine().split(" ");
                 Player result = new Player(String.valueOf(data[0]),Double.valueOf(data[1]),Integer.valueOf(data[2]),Integer.valueOf(data[3]),Integer.valueOf(data[4]));
                 if (data[0].equals(p)){ 
                     return result;
                 }                
             }
+            return null;
         }catch (FileNotFoundException e) {
             System.out.println("File not found");
             e.printStackTrace();
+            return null;
         }
-        //if file not found
-        return null;
     }
 
     public ArrayList<Double> getAllPlayersAccuracies(){
