@@ -7,8 +7,8 @@ import java.util.Random;
 public abstract class Cryptogram{
     protected String phrase = "";
     protected String[] encrypted = {};
-    protected HashMap<String, String> cryptogramAlphabet = new HashMap<String, String>();
-    protected HashMap<String, String> guesses = new HashMap<String,String>();
+    protected HashMap<String, String> cryptogramAlphabet = new HashMap<>();
+    protected HashMap<String, String> guesses = new HashMap<>();
 
     public void setPhrase(String filename){
         File myObj = new File(filename);
@@ -44,6 +44,17 @@ public abstract class Cryptogram{
                 }
             }
             guesses.put(encrypted[i], "_");
+        }
+    }
+
+    public void loadGram(){
+        encrypted = new String[phrase.length()];
+        for(int i = 0; i < phrase.length(); i++){
+            for(String j : cryptogramAlphabet.keySet()){
+                if(String.valueOf(phrase.charAt(i)).equals(j)){
+                    encrypted[i] = cryptogramAlphabet.get(j);
+                }
+            }
         }
     }
 

@@ -14,6 +14,12 @@ public class LetterCryptogram extends Cryptogram{
         cryptogramAlphabet = setCryptogramAlphabet();
     }
 
+    public LetterCryptogram(String soln, HashMap<String, String> oldGuesses, HashMap<String, String> alphabet){
+        phrase = soln;
+        guesses = oldGuesses;
+        cryptogramAlphabet = alphabet;
+    } 
+
     public HashMap<String, String> setCryptogramAlphabet(){ 
         char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
         HashMap<String, String> cryptoAlphabet = new HashMap<String, String>();

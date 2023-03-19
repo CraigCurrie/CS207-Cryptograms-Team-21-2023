@@ -1,0 +1,39 @@
+letter
+ilovequincy
+a i
+b _
+r y
+d _
+t _
+e _
+h _
+i _
+y _
+l _
+#
+a x
+b s
+c y
+d m
+e d
+f n
+g o
+h j
+i a
+j u
+k w
+l h
+m v
+n t
+o i
+p z
+q l
+r c
+s q
+t f
+u e
+v b
+w p
+x k
+y r
+z g

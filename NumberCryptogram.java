@@ -15,6 +15,12 @@ public class NumberCryptogram extends Cryptogram{
         cryptogramAlphabet = setCryptogramAlphabet();
     }
 
+    public NumberCryptogram(String soln, HashMap<String, String> oldGuesses, HashMap<String, String> alphabet){
+        phrase = soln;
+        guesses = oldGuesses;
+        cryptogramAlphabet = alphabet;
+    } 
+
     public HashMap<String, String> setCryptogramAlphabet(){ 
         char[] phraseAlphabet = phrase.toCharArray();
         HashMap<String, String> cryptoAlphabet = new HashMap<String, String>();

@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -58,32 +61,37 @@ public class Game{
     }
 
     public void playGame(Scanner in) throws IOException{
-        System.out.println("Welcome to Cryptogram!");
-        System.out.println("Enter 'number' to play a number cryptogram.");
-        System.out.println("Enter 'letter' to play a letter cryptogram.");
-        System.out.println("Enter 'leaderboards' to view all player stats. ");
-        System.out.println("Enter 'exit' to exit the game.");
+        System.out.println("| Welcome to Cryptogram!");
+        System.out.println("| Enter 'number' to play a number cryptogram.");
+        System.out.println("| Enter 'letter' to play a letter cryptogram.");
+        System.out.println("| Enter 'leaderboards' to view all player stats. ");
+        System.out.println("| Enter 'load' to load your saved game (if you have one).");
+        System.out.println("| Enter 'exit' to exit the game.");
         String inp = in.nextLine();
 
         switch(inp){
             case "number":
                 currentCryptogram = generateCryptogram(true);
-                break;
+            break;
             case "letter":
                 currentCryptogram = generateCryptogram(false);
-                break;
+            break;
             case "exit":
                 System.out.println("Exiting program...");
                 System.exit(0);
                 break;
             case "leaderboards":
                 //WIP
-                break;
+            break;
+            case "load":
+                currentCryptogram = loadGame();
+            break;
             default:
                 System.out.println("Invalid input. Try again.");
                 playGame(in);
-                break;
+            break;
         }
+        
         Boolean running = true;
         currentPlayer.incrementCryptogramsPlayed();
         while(running == true){
@@ -97,13 +105,14 @@ public class Game{
             System.out.println("CRYPTOGRAM:   "+Arrays.toString(currentCryptogram.getGram()));
             System.out.println("| Enter a letter and a position to guess (e.g c a or 3 a).");
             System.out.println("| Enter 'undo' and a letter to undo the guess of that letter. (eg undo c)");
+            System.out.println("| Enter 'save' to save your game (you may only save one game per profile).");
             System.out.println("| Enter 'exit' to exit the game.");
             String[] data = in.nextLine().split(" ");
 
             switch (data[0]) {
                 case "undo":
                     if(data.length == 2){
-                        currentCryptogram.undoLetter(data[1]);
+                        undoLetter(data[1]);
                     }else{
                         System.out.println("Invalid input. Try again.");
                     }
@@ -113,9 +122,13 @@ public class Game{
                     System.out.println("Exiting program...");
                     running = false;
                 break;
+
+                case "save":
+                    saveGame(in);
+                break;
             
-                default:
-                    running = currentCryptogram.enterLetter(data[0], data[1], in);
+                default: //does not consider invalid inputs
+                    running = enterLetter(data[0], data[1], in);
                     if(!running){
                         numGuesses++;
                         numCorrect++;
@@ -148,16 +161,96 @@ public class Game{
         }
     }
 
+    public boolean enterLetter(String a, String b, Scanner c){
+        return currentCryptogram.enterLetter(a, b, c);
+    }
+
+    public void undoLetter(String a){
+        currentCryptogram.undoLetter(a);
+    }
+
     public void viewFrequencies(){
         //not yet needed
     }
 
-    public void loadGame(){
-        //not yet needed
+    public void saveGame(Scanner in){
+        try{
+            if(currentPlayer.username.equals("guest")){
+                System.out.println("Guest accounts cannot save games.");
+                return;
+            }
+            File f = new File(currentPlayer.username + ".txt");
+            boolean running = f.exists();
+            while(running){
+                System.out.println("A save file already exists for this account. Would you like to overwrite it? 'Y' or 'N'? ");
+                String input = in.nextLine();
+                if(input.equals("N")){
+                    System.out.println("Save file not overwritten. Game has not been saved.");
+                    return;
+                }else if(input.equals("Y")){
+                    System.out.println("Save file overwritten.");
+                    running = false;
+                }else{
+                    System.out.println("Invalid input. Save file not overwritten.");
+                }
+            }     
+            FileWriter fw = new FileWriter(f);
+            if(currentCryptogram instanceof NumberCryptogram){
+                fw.write("number" + "\n");
+            }else{
+                fw.write("letter" + "\n");
+            }
+            fw.write(currentCryptogram.getPhrase().toString() + "\n");
+            for(String i: currentCryptogram.getGuesses().keySet()){
+                fw.write(i + " " + currentCryptogram.getGuesses().get(i) + "\n");
+            }
+            fw.write("#\n");
+            for(String i: currentCryptogram.getCryptogramAlphabet().keySet()){
+                fw.write(i + " " + currentCryptogram.getCryptogramAlphabet().get(i) + "\n");
+            }
+            fw.close();
+        }catch(IOException e){
+            System.out.println("Error: " + e);
+        }
     }
 
-    public void saveGame(){
-        //not yet needed
+    public Cryptogram loadGame() throws FileNotFoundException{
+        File f = new File(currentPlayer.username + ".txt");
+        if(f.exists()){
+            Scanner i = new Scanner(f);
+            String type = i.nextLine();
+            String soln = i.nextLine();
+            HashMap<String, String> guesses = new HashMap<>();
+            HashMap<String, String> alphabet = new HashMap<>();
+            boolean moreGuesses = true;
+            while(moreGuesses){
+                String temp = i.nextLine();
+                if(temp.equals("#")){
+                    moreGuesses = false;
+                }else{
+                    String data[] = temp.split(" ");
+                    guesses.put(data[0], data[1]);
+                }    
+            }
+            while(i.hasNextLine()){
+                String[] data = i.nextLine().split(" ");
+                alphabet.put(data[0], data[1]);
+            }
+            if(type == "number"){
+                NumberCryptogram c = new NumberCryptogram(soln, guesses, alphabet);
+                c.loadGram();
+                i.close();
+                return c;
+            }else{
+                LetterCryptogram c = new LetterCryptogram(soln, guesses, alphabet);
+                c.loadGram();
+                i.close();
+                return c;
+            }
+        }else{
+            System.out.println("No save file found for this account.");
+            return null;
+        }
     }
 
     public void showSolution(){
@@ -172,4 +265,3 @@ public class Game{
         in.close();
     }
 }
-    
