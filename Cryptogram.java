@@ -72,54 +72,42 @@ public abstract class Cryptogram{
         }
     }
     public boolean enterLetter(String target, String guess, Scanner in){
-        boolean valid = false;
-        for(String i : guesses.keySet()){
-            if(target.equals(i)){
-                valid = true;
+        boolean full = true;
+        //Checks if that character has already been entered
+        for(String i : guesses.values()){
+            if(guess.equals(i)){
+                System.out.println("That character has already been guessed, for the letter: " + i);
+                return true;
             }
         }
 
-        if(valid){
-            boolean full = true;
-            //Checks if that character has already been entered
-            for(String i : guesses.values()){
-                if(guess.equals(i)){
-                    System.out.println("That character has already been guessed, for the letter: " + i);
-                    return true;
+        if(!guesses.get(target).equals("_")){
+            override(guess, target, in);
+        }else{
+            for(String i : guesses.keySet()){
+                if(target.equals(i)){
+                    guesses.put(i, guess);
                 }
             }
-
-            if(!guesses.get(target).equals("_")){
-                override(guess, target, in);
-            }else{
-                for(String i : guesses.keySet()){
-                    if(target.equals(i)){
-                        guesses.put(i, guess);
-                    }
+        }
+        full = !guesses.containsValue("_");
+        
+        if(full){
+            boolean allCorrect = true;
+            //Checks if the cryptogram has been solved
+            for(int i = 0; i < phrase.length(); i++){
+                if(!String.valueOf(phrase.charAt(i)).equals(guesses.get(encrypted[i]))){
+                    allCorrect = false;
                 }
             }
-            full = !guesses.containsValue("_");
-            
-            if(full){
-                boolean allCorrect = true;
-                //Checks if the cryptogram has been solved
-                for(int i = 0; i < phrase.length(); i++){
-                    if(!String.valueOf(phrase.charAt(i)).equals(guesses.get(encrypted[i]))){
-                        allCorrect = false;
-                    }
-                }
-                if(allCorrect){
-                    System.out.println("Well done! The cryptogram has been solved!");
-                    return false;
-                }else{
-                    System.out.println("Your current guess is incorrect, try again! ");
-                    return true;
-                }
+            if(allCorrect){
+                System.out.println("Well done! The cryptogram has been solved!");
+                return false;
             }else{
+                System.out.println("Your current guess is incorrect, try again! ");
                 return true;
             }
         }else{
-            System.out.println("Invalid input. \n");
             return true;
         }
     }

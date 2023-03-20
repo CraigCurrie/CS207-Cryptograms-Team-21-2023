@@ -127,8 +127,23 @@ public class Game{
                     saveGame(in);
                 break;
             
-                default: //does not consider invalid inputs
-                    running = enterLetter(data[0], data[1], in);
+                default:
+                    if(data.length != 2){
+                        System.out.println("Invalid input. Try again.");
+                        break;
+                    }
+                    boolean valid = false;
+                    for(String i : currentCryptogram.getGuesses().keySet()){
+                        if(data[0].equals(i)){
+                            valid = true;
+                        }
+                    }
+                    if(valid){
+                        running = enterLetter(data[0], data[1], in);
+                    }else{
+                        System.out.println("Invalid input. Try again.");
+                        break;
+                    }
                     if(!running){
                         numGuesses++;
                         numCorrect++;
