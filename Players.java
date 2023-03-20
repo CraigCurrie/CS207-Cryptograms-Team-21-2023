@@ -71,7 +71,7 @@ public class Players{
     public Player findPlayer(String p){
         File myObj = new File("AllPlayers.txt");
         try (Scanner in = new Scanner(myObj)) {
-            String[] data = null;
+            String data[] = null;
             while (in.hasNextLine()) {
                 data = in.nextLine().split(" ");
                 Player result = new Player(String.valueOf(data[0]),Double.valueOf(data[1]),Integer.valueOf(data[2]),Integer.valueOf(data[3]),Integer.valueOf(data[4]));
