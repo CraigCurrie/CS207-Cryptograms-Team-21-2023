@@ -119,4 +119,41 @@ public class cryptoTests {
         game.undoLetter(target);
         Assert.assertEquals(originalMap, game.PlayerGameMapping);
     }
+
+
+
+
+    @Test
+
+    public void testSaveGame() {
+        // Test saving a game
+        game.saveGame();
+        Assert.assertTrue(game.saveGame());
+    }
+
+    @Test
+    public void testLoadGame() {
+        // Test loading a game
+        game.loadGame();
+        Assert.assertTrue(game.loadGame());
+    }
+
+    @Test
+    public void testSaveGameNoFile() {
+        // Test saving a game with no file
+        game.saveGame("test.txt");
+        Assert.assertFalse(game.saveGame());
+    }
+    
+    @Test
+    public void testLoadGameNoFile() {
+        // Test loading a game with no file
+        game.loadGame("test.txt");
+        Assert.assertFalse(game.loadGame());
+    }
+
+
+
+
+
 } 
