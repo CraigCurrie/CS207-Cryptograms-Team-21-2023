@@ -1,6 +1,10 @@
 import org.junit.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Map.Entry;
@@ -11,7 +15,6 @@ public class cryptoTests {
     @Before
     public void setUp()throws IOException{
         game = new Game();
-        game.currentCryptogram = game.generateCryptogram(false);
     }
     
     //User Story 1
@@ -42,16 +45,13 @@ public class cryptoTests {
     @Test
     public void testEnterLetter() throws IOException{
         // Test entering a letter
-        String target = " ";
-        for(String i: game.currentCryptogram.getGuesses().keySet()){
-            target = i;
-        }
-        String guess = "b";
-        Scanner scan = new Scanner("e");
-        game.generateCryptogram(false);
-        game.currentCryptogram.getGuesses().put("a", "_");
-        game.enterLetter(target, guess, scan);
-        Assert.assertEquals(guess, game.currentCryptogram.getGuesses().get(target));
+        System.setIn(new ByteArrayInputStream("testPlayer\nload\ng h".getBytes()));
+        Scanner in = new Scanner(System.in);
+
+        game.loadPlayer(in);
+        game.playGame(in);
+
+        Assert.assertEquals(game.currentCryptogram.getGuesses().get("a"), "b");
     }
 
     @Test 

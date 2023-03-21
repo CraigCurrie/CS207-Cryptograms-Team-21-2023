@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.util.*;
 
 public class Game{
-    int numGuesses = 0;
-    int numCorrect = 0;
+    double numGuesses = 0.0;
+    double numCorrect = 0.0;
     Players GamePlayers = new Players();
     Player currentPlayer;
     Cryptogram currentCryptogram;
@@ -61,35 +61,50 @@ public class Game{
     }
 
     public void playGame(Scanner in) throws IOException{
-        System.out.println("| Welcome to Cryptogram!");
-        System.out.println("| Enter 'number' to play a number cryptogram.");
-        System.out.println("| Enter 'letter' to play a letter cryptogram.");
-        System.out.println("| Enter 'leaderboards' to view all player stats. ");
-        System.out.println("| Enter 'load' to load your saved game (if you have one).");
-        System.out.println("| Enter 'exit' to exit the game.");
-        String inp = in.nextLine();
-
-        switch(inp){
-            case "number":
-                currentCryptogram = generateCryptogram(true);
-            break;
-            case "letter":
-                currentCryptogram = generateCryptogram(false);
-            break;
-            case "exit":
-                System.out.println("Exiting program...");
-                System.exit(0);
+        boolean waiting = true;
+        while(waiting){
+            System.out.println("| Welcome to Cryptogram!");
+            System.out.println("| Enter 'number' to play a number cryptogram.");
+            System.out.println("| Enter 'letter' to play a letter cryptogram.");
+            System.out.println("| Enter 'leaderboards' to view all player stats. ");
+            System.out.println("| Enter 'load' to load your saved game (if you have one).");
+            System.out.println("| Enter 'exit' to exit the game.");
+            String inp = in.nextLine();
+        
+            switch(inp){
+                case "number":
+                    currentCryptogram = generateCryptogram(true);
+                    waiting = false;
                 break;
-            case "leaderboards":
-                //WIP
-            break;
-            case "load":
-                currentCryptogram = loadGame();
-            break;
-            default:
-                System.out.println("Invalid input. Try again.");
-                playGame(in);
-            break;
+
+                case "letter":
+                    currentCryptogram = generateCryptogram(false);
+                    waiting = false;
+                break;
+
+                case "exit":
+                    System.out.println("Exiting program...");
+                    System.exit(0);
+                break;
+
+                case "leaderboards":
+                    //WIP
+                break;
+
+                case "load":
+                    currentCryptogram = loadGame();
+                    if(currentCryptogram != null){
+                        waiting = false;
+                    }else{
+                        waiting = true;
+                    }
+                break;
+
+                default:
+                    System.out.println("Invalid input. Try again.");
+                    playGame(in);
+                break;
+            }
         }
         
         Boolean running = true;
@@ -144,14 +159,9 @@ public class Game{
                         System.out.println("Invalid input. Try again.");
                         break;
                     }
-                    if(!running){
-                        numGuesses++;
-                        numCorrect++;
-                    }else{
-                        numGuesses++;
-                        if(currentCryptogram.getGuesses().get(data[0]).equals(currentCryptogram.getCryptogramAlphabet().get(data[0]))){
-                            numCorrect++;
-                        }
+                    numGuesses += 1.0;
+                    if(data[1].equals(currentCryptogram.getGuesses().get(data[0]))){
+                        numCorrect += 1.0;
                     }
                 break;
             }
@@ -159,7 +169,7 @@ public class Game{
         //Game over
         currentPlayer.incrementCryptogramsCompleted();
         currentPlayer.updateTotalGuesses(numGuesses);
-        double gameAccuracy = (((double)numCorrect)/numGuesses) * 100.0;
+        double gameAccuracy = (numCorrect/numGuesses) * 100.0;
         currentPlayer.updateAccuracy(gameAccuracy);
         GamePlayers.savePlayer(currentPlayer);
     }

@@ -18,7 +18,6 @@ public class Players{
             
             while (in.hasNextLine()){
                 data = in.nextLine().split(" ");
-                //(data[0],Integer.valueOf(data[1]),Integer.valueOf(data[2]),Integer.valueOf(data[3]),Integer.valueOf(data[4]));
                 allPlayers.add(new Player(data[0],Integer.valueOf(data[1]),Integer.valueOf(data[2]),Integer.valueOf(data[3]),Integer.valueOf(data[4])));
             }
         } catch (FileNotFoundException e) {
@@ -32,8 +31,7 @@ public class Players{
         try{ 
             FileWriter mywriter = new FileWriter("AllPlayers.txt", true);
             BufferedWriter bw = new BufferedWriter(mywriter);
-            bw.newLine();
-            bw.write(name +" "+ acc +" "+ numGuess +" "+ numPlayed +" "+ numCompleted);
+            bw.write(name +" "+ acc +" "+ numGuess +" "+ numPlayed +" "+ numCompleted + "\n");
             bw.close();
             System.out.println("Player successfully added.");
         } catch (IOException e) {
@@ -56,7 +54,6 @@ public class Players{
                 try {
                     FileWriter mywriter = new FileWriter("AllPlayers.txt");
                     mywriter.append(data);
-                    mywriter.flush();
                     mywriter.close();
                 } catch (IOException e) {
                     System.out.println("file not found");

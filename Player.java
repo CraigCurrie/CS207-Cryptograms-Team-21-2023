@@ -20,8 +20,9 @@ public class Player{
         return;
     }
 
-    public void updateTotalGuesses(int x){
-        totalGuesses += x;
+    public void updateTotalGuesses(double x){
+        int temp = (int) x;
+        totalGuesses += temp;
         return;
     }
 
