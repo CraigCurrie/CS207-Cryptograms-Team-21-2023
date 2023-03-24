@@ -16,10 +16,8 @@ public class Players{
         try (Scanner in = new Scanner(myObj)) {
             String[] data = null;
             
-            while (in.hasNextLine()) {
-                
+            while (in.hasNextLine()){
                 data = in.nextLine().split(" ");
-                //(data[0],Integer.valueOf(data[1]),Integer.valueOf(data[2]),Integer.valueOf(data[3]),Integer.valueOf(data[4]));
                 allPlayers.add(new Player(data[0],Integer.valueOf(data[1]),Integer.valueOf(data[2]),Integer.valueOf(data[3]),Integer.valueOf(data[4])));
             }
         } catch (FileNotFoundException e) {
@@ -33,8 +31,7 @@ public class Players{
         try{ 
             FileWriter mywriter = new FileWriter("AllPlayers.txt", true);
             BufferedWriter bw = new BufferedWriter(mywriter);
-            bw.newLine();
-            bw.write(name +" "+ acc +" "+ numGuess +" "+ numPlayed +" "+ numCompleted);
+            bw.write(name +" "+ acc +" "+ numGuess +" "+ numPlayed +" "+ numCompleted + "\n");
             bw.close();
             System.out.println("Player successfully added.");
         } catch (IOException e) {
@@ -43,7 +40,7 @@ public class Players{
         }
     }
 
-    public void savePlayer(Player p){;
+    public void savePlayer(Player p){
             try (Scanner in = new Scanner(new File("AllPlayers.txt"))) {
                 StringBuffer buffer = new StringBuffer();
                 while (in.hasNextLine()){
@@ -57,7 +54,6 @@ public class Players{
                 try {
                     FileWriter mywriter = new FileWriter("AllPlayers.txt");
                     mywriter.append(data);
-                    mywriter.flush();
                     mywriter.close();
                 } catch (IOException e) {
                     System.out.println("file not found");
@@ -72,22 +68,20 @@ public class Players{
     public Player findPlayer(String p){
         File myObj = new File("AllPlayers.txt");
         try (Scanner in = new Scanner(myObj)) {
-            String[] data = null;
-        
+            String data[] = null;
             while (in.hasNextLine()) {
-                
                 data = in.nextLine().split(" ");
                 Player result = new Player(String.valueOf(data[0]),Double.valueOf(data[1]),Integer.valueOf(data[2]),Integer.valueOf(data[3]),Integer.valueOf(data[4]));
                 if (data[0].equals(p)){ 
                     return result;
                 }                
             }
+            return null;
         }catch (FileNotFoundException e) {
             System.out.println("File not found");
             e.printStackTrace();
+            return null;
         }
-        //if file not found
-        return null;
     }
 
     public ArrayList<Double> getAllPlayersAccuracies(){

@@ -1,14 +1,19 @@
 import org.junit.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.Map.Entry;
 
 public class cryptoTests {
     private Game game;
     
     @Before
-    public void setUp() {
+    public void setUp()throws IOException{
         game = new Game();
     }
     
@@ -38,14 +43,15 @@ public class cryptoTests {
     //User Story 2
 
     @Test
-    public void testEnterLetter() {
+    public void testEnterLetter() throws IOException{
         // Test entering a letter
-        String guess = "a";
-        String target = "b";
-        Scanner scan = new Scanner("e");
-        game.PlayerGameMapping.put(target, "_");
-        game.enterLetter(target, guess, scan);
-        Assert.assertEquals(guess, game.PlayerGameMapping.get(target));
+        System.setIn(new ByteArrayInputStream("testPlayer\nload\ng h".getBytes()));
+        Scanner in = new Scanner(System.in);
+
+        game.loadPlayer(in);
+        game.playGame(in);
+
+        Assert.assertEquals(game.currentCryptogram.getGuesses().get("a"), "b");
     }
 
     @Test 
@@ -54,19 +60,20 @@ public class cryptoTests {
         String guess = "c";
         String target = "d";
         Scanner scan = new Scanner("Y");
-        game.PlayerGameMapping.put(target, "e");
+        game.currentCryptogram.getGuesses().put(target, "e");
         game.enterLetter(target, guess, scan);
-        Assert.assertEquals(guess, game.PlayerGameMapping.get(target));
+        Assert.assertEquals(guess, game.currentCryptogram.getGuesses().get(target));
     }
+
     @Test
     public void testNotOverride() {
         // Test entering a letter that has already been guessed but not overriding
         String guess = "c";
         String target = "d";
         Scanner scan = new Scanner("N");
-        game.PlayerGameMapping.put(target, "e");
+        game.currentCryptogram.getGuesses().put(target, "e");
         game.enterLetter(target, guess, scan);
-        Assert.assertNotSame(guess, game.PlayerGameMapping.get(target));
+        Assert.assertNotSame(guess, game.currentCryptogram.getGuesses().get(target));
     }
 
     @Test 
@@ -75,10 +82,10 @@ public class cryptoTests {
         String guess = "c";
         String target = "d";
         Scanner scan = new Scanner("e");
-        game.PlayerGameMapping.put("a", "c");
-        game.PlayerGameMapping.put(target, "_");
+        game.currentCryptogram.getGuesses().put("a", "c");
+        game.currentCryptogram.getGuesses().put(target, "_");
         game.enterLetter(target, guess, scan);
-        Assert.assertNotSame(guess, game.PlayerGameMapping.get(target));
+        Assert.assertNotSame(guess, game.currentCryptogram.getGuesses().get(target));
     }
 
     @Test
@@ -112,4 +119,41 @@ public class cryptoTests {
         game.undoLetter(target);
         Assert.assertEquals(originalMap, game.PlayerGameMapping);
     }
+
+
+
+
+    @Test
+
+    public void testSaveGame() {
+        // Test saving a game
+        game.saveGame();
+        Assert.assertTrue(game.saveGame());
+    }
+
+    @Test
+    public void testLoadGame() {
+        // Test loading a game
+        game.loadGame();
+        Assert.assertTrue(game.loadGame());
+    }
+
+    @Test
+    public void testSaveGameNoFile() {
+        // Test saving a game with no file
+        game.saveGame("test.txt");
+        Assert.assertFalse(game.saveGame());
+    }
+    
+    @Test
+    public void testLoadGameNoFile() {
+        // Test loading a game with no file
+        game.loadGame("test.txt");
+        Assert.assertFalse(game.loadGame());
+    }
+
+
+
+
+
 } 

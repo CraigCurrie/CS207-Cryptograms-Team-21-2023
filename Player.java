@@ -2,6 +2,7 @@ public class Player{
     String username;
     Double accuracy;
     int totalGuesses;
+    int totalCorrect;
     int cryptogramsPlayed;
     int cryptogramsCompleted;
 
@@ -11,25 +12,53 @@ public class Player{
         totalGuesses = numGuess;
         cryptogramsPlayed = numPlayed;
         cryptogramsCompleted = numCompleted;
-    }    
+    }   
+
     public void updateAccuracy(double acc){
         accuracy += acc;
         accuracy /= 2;
+        return;
     }
+
+    public void updateTotalGuesses(double x){
+        int temp = (int) x;
+        totalGuesses += temp;
+        return;
+    }
+
     public void incrementCryptogramsCompleted(){
         cryptogramsCompleted++;
+        return;
     }
+
     public void incrementCryptogramsPlayed(){
         cryptogramsPlayed++;
+        return;
+    }
+
+    public void printAccuracy(){
+        System.out.println(accuracy);
+        return;
+    }
+
+    public void printNumCryptogramsCompleted(){
+        System.out.println(cryptogramsCompleted);
+        return;
+    }
+
+    public void printNumCryptogramsPlayed(){
+        System.out.println(cryptogramsPlayed);
+        return;
     }
     public Double getAccuracy() {
         return accuracy;
     }
+
     public int getNumCryptogramsCompleted() {
         return cryptogramsCompleted;
     }
+
     public int getNumCryptogramsPlayed() {
         return cryptogramsPlayed;
     }
-
 }
