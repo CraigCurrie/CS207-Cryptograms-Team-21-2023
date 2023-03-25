@@ -2,10 +2,15 @@ import org.junit.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Map.Entry;
 
@@ -152,6 +157,99 @@ public class cryptoTests {
         Assert.assertFalse(game.loadGame());
     }
 
+    @Test
+    public void testShowSolution() throws IOException{
+        Scanner in = new Scanner("letter");
+        String orgGuesses = null;
+        String newGuesses = null;
+        //create an instance of the game
+        game.playGame(in);
+        for(int i = 0; i < game.currentCryptogram.getGram().length; i++){
+            orgGuesses = orgGuesses + game.currentCryptogram.getGuesses().get(game.currentCryptogram.getGram()[i]);
+        }
+        //run show solutions
+
+        for(int i = 0; i < game.currentCryptogram.getGram().length; i++){
+            newGuesses = newGuesses + game.currentCryptogram.getGuesses().get(game.currentCryptogram.getGram()[i]);
+        }
+        Assert.assertEquals(newGuesses,orgGuesses);
+    }
+
+    @Test
+    public void testShowFrequencies(){
+        //set cryptogram to "abbcccdddd"
+
+        //run frequencies 
+
+        //assert that frequencies for a-d are 1,2,3,4
+
+    }
+
+    @Test
+    public void testSeeTop10(){
+        List<String> top10Players = new ArrayList<String>();
+        List<Player> tempAllPlayers = new ArrayList<Player>();
+        File myObj = new File("AllPlayers.txt");
+        try (Scanner scan = new Scanner(myObj)) {
+            String[] data = null;
+            int i2 = 0;
+            while (scan.hasNextLine()){
+                data = scan.nextLine().split(" ");
+                if (data.length != 5) {
+                    Assert.assertEquals("", data[0]);
+                    i2 = i2 + 1;
+                    // handle error condition (e.g. log error, skip line, etc.)
+                } else {
+                    tempAllPlayers.add(new Player(data[0],Double.valueOf(data[1]),Integer.valueOf(data[2]),Integer.valueOf(data[3]),Integer.valueOf(data[4])));
+                }
+                
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+            e.printStackTrace();
+        }
+        Collections.sort(tempAllPlayers);
+
+        for(int i = 0; i < 10; i++){
+            if(tempAllPlayers.size() < 1 + i){
+                top10Players.add(null);
+            }
+            else{
+                top10Players.add(tempAllPlayers.get(i).username);
+            }
+        }
+
+        //check top10players is equal to cryptograms top 10
+        Assert.assertEquals("",top10Players);
+    }
+    @Test
+    public void fileExists(){
+        File myObj = new File("AllPlayers.txt");
+        Assert.assertTrue(myObj.exists());
+    }
+
+    @Test
+    public void testSeeTop10WhenNoPlayers(){
+        //set file to empty file
+
+        //run see top 10 players
+
+        //assert output is a message saying that there is no players stored
+    }
+
+    @Test
+    public void testHintEmpty(){
+        //set current cryptogram to abcd
+
+        //get hint(if we do all vowels it will be a)
+
+        //assert that guess in pos 1 is a
+    }
+
+    @Test
+    public void testHintOveride(){
+
+    }
 
 
 

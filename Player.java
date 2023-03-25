@@ -1,10 +1,14 @@
-public class Player{
+public class Player implements Comparable<Player>{
     String username;
     Double accuracy;
     int totalGuesses;
     int totalCorrect;
     int cryptogramsPlayed;
     int cryptogramsCompleted;
+
+    public int compareTo(Player otherP) {
+        return Integer.compare(this.cryptogramsCompleted, otherP.cryptogramsCompleted);
+    }
 
     public Player(String name, double acc, int numGuess,int numPlayed,int numCompleted){
         username = name;
