@@ -1,4 +1,4 @@
-kyle 100.0 4 17 17
+kyle 100.0 4 27 27
 bill 100.0 0 0 0
 craig 12.5 4 7 7
 bob 100.0 0 0 0
@@ -6,8 +6,8 @@ bobby 100.0 0 0 0
 mark 100.0 0 0 0
 harry 100.0 0 0 0
 garry 100.0 0 0 0
-joe NaN 0 1 1 
+joe 100.0 0 1 1 
 guest 0.0 0 0 0
-testPlayer NaN 2 2 2
+testPlayer 100.0 2 2 2
 matteo 100.0 0 0 0
 ben 100.0 0 0 0

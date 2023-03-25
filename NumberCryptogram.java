@@ -32,6 +32,7 @@ public class NumberCryptogram extends Cryptogram{
         for(char c: phraseAlphabet){
             int x = rand.nextInt(unusedNumbers.size());
             cryptoAlphabet.put(String.valueOf(c), String.valueOf(unusedNumbers.get(x)));
+            freqs.put(String.valueOf(unusedNumbers.get(x)), 0);
             unusedNumbers.remove(x);
         }
         return cryptoAlphabet;

@@ -9,6 +9,8 @@ public abstract class Cryptogram{
     protected String[] encrypted = {};
     protected HashMap<String, String> cryptogramAlphabet = new HashMap<>();
     protected HashMap<String, String> guesses = new HashMap<>();
+    protected HashMap<String, Integer> freqs = new HashMap<>();
+    Scanner in = new Scanner(System.in);
 
     public void setPhrase(String filename){
         File myObj = new File(filename);
@@ -35,12 +37,22 @@ public abstract class Cryptogram{
         return phrase;
     }
 
+    public void showFrequencies(){
+        System.out.println("Frequencies:");
+        for(String i: guesses.keySet()){
+            System.out.print(i + ":" + freqs.get(i) + ", ");
+        }
+        System.out.println();
+    }
+
     public void genGram(){
         encrypted = new String[phrase.length()];
         for(int i = 0; i < phrase.length(); i++){
             for(String j : cryptogramAlphabet.keySet()){
                 if(String.valueOf(phrase.charAt(i)).equals(j)){
                     encrypted[i] = cryptogramAlphabet.get(j);
+                    int prev = freqs.get(encrypted[i]);
+                    freqs.put(encrypted[i], prev + 1);
                 }
             }
             guesses.put(encrypted[i], "_");
@@ -71,7 +83,7 @@ public abstract class Cryptogram{
             guesses.put(target, "_");
         }
     }
-    public boolean enterLetter(String target, String guess, Scanner in){
+    public boolean enterLetter(String target, String guess){
         boolean full = true;
         //Checks if that character has already been entered
         for(String i : guesses.values()){
@@ -82,7 +94,7 @@ public abstract class Cryptogram{
         }
 
         if(!guesses.get(target).equals("_")){
-            override(guess, target, in);
+            override(guess, target);
         }else{
             for(String i : guesses.keySet()){
                 if(target.equals(i)){
@@ -112,7 +124,7 @@ public abstract class Cryptogram{
         }
     }
 
-    public void override(String input, String origin, Scanner in){
+    public void override(String input, String origin){
         //When the letter being guessed for is not empty, asks if player wants to override prior guess
         boolean running = true;
         while(running){

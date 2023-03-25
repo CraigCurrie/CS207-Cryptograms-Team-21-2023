@@ -10,19 +10,15 @@ public class Game{
     Players GamePlayers = new Players();
     Player currentPlayer;
     Cryptogram currentCryptogram;
+    Scanner in = new Scanner(System.in);
     
     //public Game(Player p, String CryptType){
     //}
 
     //public Game(Player p){
     //}
-
-
-    public void getHint(){
-        //not yet needed
-    }
     
-    public void loadPlayer(Scanner in){
+    public void loadPlayer(){
         Boolean running = true;
         //Gets players username
         System.out.println("Please enter your username: ");
@@ -60,13 +56,13 @@ public class Game{
         }
     }
 
-    public void playGame(Scanner in) throws IOException{
+    public void playGame() throws IOException{
         boolean waiting = true;
         while(waiting){
             System.out.println("| Welcome to Cryptogram!");
             System.out.println("| Enter 'number' to play a number cryptogram.");
             System.out.println("| Enter 'letter' to play a letter cryptogram.");
-            System.out.println("| Enter 'leaderboards' to view all player stats. ");
+            System.out.println("| Enter 'leaderboard' to view the top ten players. ");
             System.out.println("| Enter 'load' to load your saved game (if you have one).");
             System.out.println("| Enter 'exit' to exit the game.");
             String inp = in.nextLine();
@@ -87,8 +83,8 @@ public class Game{
                     System.exit(0);
                 break;
 
-                case "leaderboards":
-                    //WIP
+                case "leaderboard":
+                    showLeaderboard();
                 break;
 
                 case "load":
@@ -102,14 +98,14 @@ public class Game{
 
                 default:
                     System.out.println("Invalid input. Try again.");
-                    playGame(in);
+                    playGame();
                 break;
             }
         }
         
         Boolean running = true;
         currentPlayer.incrementCryptogramsPlayed();
-        while(running == true){
+        while(running){
             //Output display for user
             System.out.println("YOUR GUESSES: "+currentCryptogram.getGuesses());
             System.out.print("CURRENT GUESS: ");
@@ -120,7 +116,10 @@ public class Game{
             System.out.println("CRYPTOGRAM:   "+Arrays.toString(currentCryptogram.getGram()));
             System.out.println("| Enter a letter and a position to guess (e.g c a or 3 a).");
             System.out.println("| Enter 'undo' and a letter to undo the guess of that letter. (eg undo c)");
+            System.out.println("| Enter 'hint' to fill in a letter.");
+            System.out.println("| Enter 'freqs' to display the frequencies of the letters.");
             System.out.println("| Enter 'save' to save your game (you may only save one game per profile).");
+            System.out.println("| Enter 'solve' to show the solution.");
             System.out.println("| Enter 'exit' to exit the game.");
             String[] data = in.nextLine().split(" ");
 
@@ -139,7 +138,20 @@ public class Game{
                 break;
 
                 case "save":
-                    saveGame(in);
+                    saveGame();
+                break;
+
+                case "solve":
+                    showSolution();
+                    running = false;
+                break;
+
+                case "freqs":
+                    viewFrequencies();
+                break;
+
+                case "hint":
+                    running = getHint();
                 break;
             
                 default:
@@ -154,7 +166,7 @@ public class Game{
                         }
                     }
                     if(valid){
-                        running = enterLetter(data[0], data[1], in);
+                        running = enterLetter(data[0], data[1]);
                     }else{
                         System.out.println("Invalid input. Try again.");
                         break;
@@ -186,19 +198,32 @@ public class Game{
         }
     }
 
-    public boolean enterLetter(String a, String b, Scanner c){
-        return currentCryptogram.enterLetter(a, b, c);
+    public boolean enterLetter(String a, String b){
+        return currentCryptogram.enterLetter(a, b);
     }
 
     public void undoLetter(String a){
         currentCryptogram.undoLetter(a);
     }
 
-    public void viewFrequencies(){
-        //not yet needed
+    public boolean getHint(){
+        for(int i = 0; i < currentCryptogram.getGram().length; i++){
+            if(currentCryptogram.getGuesses().get(currentCryptogram.getGram()[i]).equals("_")){
+                return currentCryptogram.enterLetter(currentCryptogram.getGram()[i], String.valueOf(currentCryptogram.getPhrase().charAt(i)));
+            }
+        }
+        return false; //This should never be reached, but it's here to make the compiler happy.
     }
 
-    public void saveGame(Scanner in){
+    public void viewFrequencies(){
+        currentCryptogram.showFrequencies();
+    }
+
+    public void showLeaderboard(){
+        GamePlayers.showLeaderboard();
+    }
+
+    public void saveGame(){
         try{
             if(currentPlayer.username.equals("guest")){
                 System.out.println("Guest accounts cannot save games.");
@@ -279,14 +304,17 @@ public class Game{
     }
 
     public void showSolution(){
-        //not yet needed
+        System.out.print("SOLUTION:      ");
+            for(int i = 0; i < currentCryptogram.getGram().length; i++){
+                System.out.print(currentCryptogram.getPhrase().charAt(i) + ", ");
+            }
+            System.out.println();
+            System.out.println("CRYPTOGRAM:   "+Arrays.toString(currentCryptogram.getGram()));
     }
 
     public static void main(String[] args) throws IOException{
-        Scanner in = new Scanner(System.in);
         Game g = new Game();
-        g.loadPlayer(in);
-        g.playGame(in);
-        in.close();
+        g.loadPlayer();
+        g.playGame();
     }
 }

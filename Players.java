@@ -11,14 +11,14 @@ public class Players{
     List<Player> allPlayers = new ArrayList<Player>();
 
     //this should just be the constructor of Players
-    public void LoadPlayers(){
+    public Players(){
         File myObj = new File("AllPlayers.txt");
         try (Scanner in = new Scanner(myObj)) {
             String[] data = null;
             
             while (in.hasNextLine()){
                 data = in.nextLine().split(" ");
-                allPlayers.add(new Player(data[0],Integer.valueOf(data[1]),Integer.valueOf(data[2]),Integer.valueOf(data[3]),Integer.valueOf(data[4])));
+                allPlayers.add(new Player(data[0],Double.valueOf(data[1]),Integer.valueOf(data[2]),Integer.valueOf(data[3]),Integer.valueOf(data[4])));
             }
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
@@ -66,26 +66,39 @@ public class Players{
         }
     
     public Player findPlayer(String p){
-        File myObj = new File("AllPlayers.txt");
-        try (Scanner in = new Scanner(myObj)) {
-            String data[] = null;
-            while (in.hasNextLine()) {
-                data = in.nextLine().split(" ");
-                Player result = new Player(String.valueOf(data[0]),Double.valueOf(data[1]),Integer.valueOf(data[2]),Integer.valueOf(data[3]),Integer.valueOf(data[4]));
-                if (data[0].equals(p)){ 
-                    return result;
-                }                
+        for(int i = 0; i < allPlayers.size(); i++){
+            if(allPlayers.get(i).username.equals(p)){
+                return allPlayers.get(i);
             }
-            return null;
-        }catch (FileNotFoundException e) {
-            System.out.println("File not found");
-            e.printStackTrace();
-            return null;
+        }
+        return null;
+    }
+
+    public void showLeaderboard(){
+        if(allPlayers.size() == 0){
+            System.out.println("No players have been added yet.");
+        }else{
+            List<Player> tempPlayers = allPlayers;
+            for(int j = 0; j<10; j++){ 
+                if(tempPlayers.size() == 0){
+                    System.out.println("NONE");
+                }else{
+                    int max = -1;
+                    String name = "";
+                    for(int i = 0; i < tempPlayers.size(); i++){
+                        if(tempPlayers.get(i).cryptogramsCompleted > max){
+                            max = tempPlayers.get(i).cryptogramsCompleted;
+                            name = tempPlayers.get(i).username;
+                        }
+                    }
+                    System.out.println((j+1) + ". " + name + " - " + max);
+                    tempPlayers.remove(findPlayer(name));
+                }
+            }
         }
     }
 
     public ArrayList<Double> getAllPlayersAccuracies(){
-        LoadPlayers();
         int i = 0;
         Player p;
         ArrayList<Double> result = new ArrayList<Double>();
@@ -98,7 +111,6 @@ public class Players{
     }
 
     public ArrayList<Integer> getAllPlayersCryptogramsPlayed(){
-        LoadPlayers();
         int i = 0;
         Player p;
         ArrayList<Integer> result = new ArrayList<Integer>();
@@ -111,7 +123,6 @@ public class Players{
     }
 
     public ArrayList<Integer> getAllPlayersCryptogramsCompleted(){
-        LoadPlayers();
         int i = 0;
         Player p;
         ArrayList<Integer> result = new ArrayList<Integer>();

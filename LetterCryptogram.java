@@ -31,6 +31,7 @@ public class LetterCryptogram extends Cryptogram{
         for(char c: alphabet){
             int x = rand.nextInt(unusedLetters.size());
             cryptoAlphabet.put(String.valueOf(c), String.valueOf(unusedLetters.get(x)));
+            freqs.put(String.valueOf(c), 0);
             unusedLetters.remove(x);
         }
         return cryptoAlphabet;
