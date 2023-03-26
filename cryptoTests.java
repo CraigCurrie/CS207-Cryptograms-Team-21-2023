@@ -159,20 +159,27 @@ public class cryptoTests {
 
     @Test
     public void testShowSolution() throws IOException{
-        Scanner in = new Scanner("letter");
-        String orgGuesses = null;
-        String newGuesses = null;
-        //create an instance of the game
-        game.playGame(in);
-        for(int i = 0; i < game.currentCryptogram.getGram().length; i++){
-            orgGuesses = orgGuesses + game.currentCryptogram.getGuesses().get(game.currentCryptogram.getGram()[i]);
-        }
-        //run show solutions
-
-        for(int i = 0; i < game.currentCryptogram.getGram().length; i++){
-            newGuesses = newGuesses + game.currentCryptogram.getGuesses().get(game.currentCryptogram.getGram()[i]);
-        }
-        Assert.assertEquals(newGuesses,orgGuesses);
+        Game g = new Game();
+        Cryptogram c = g.generateCryptogram(false);
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
+        
+        g.currentCryptogram = c;
+        c.phrase = "abcd";
+        c.guesses.put("a","_");
+        c.guesses.put("b","_");
+        c.guesses.put("c","_");
+        c.guesses.put("d","_");
+        c.genGram();
+        c.encrypted[0] = "a";
+        c.encrypted[1] = "b";
+        c.encrypted[2] = "c";
+        c.encrypted[3] = "d";
+        //run show solution
+        g.showSolution();
+        //assert that guess in key a is a
+        String expectedOutput = "SOLUTION:      a, b, c, d,";
+        Assert.assertEquals(expectedOutput, outContent.toString().trim());
     }
 
     @Test
@@ -255,11 +262,11 @@ public class cryptoTests {
         c.encrypted[1] = "b";
         c.encrypted[2] = "c";
         c.encrypted[3] = "d";
-        c.enterLetter("a", "a");
-        //get hint(should be b)
+        c.enterLetter("a", "b");
+        //get hint(should be a)
         g.getHint();
-        //assert that guess in pos 1 is a
-        Assert.assertEquals(g.currentCryptogram.getGuesses().get(g.currentCryptogram.getGram()[0]),c.guesses.get("b"));
+        //assert that guess in key a is a
+        Assert.assertEquals("a",c.guesses.get("a"));
     }
 
 

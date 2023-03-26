@@ -308,8 +308,6 @@ public class Game{
             for(int i = 0; i < currentCryptogram.getGram().length; i++){
                 System.out.print(currentCryptogram.getPhrase().charAt(i) + ", ");
             }
-            System.out.println();
-            System.out.println("CRYPTOGRAM:   "+Arrays.toString(currentCryptogram.getGram()));
     }
 
     public static void main(String[] args) throws IOException{
