@@ -42,6 +42,12 @@ public abstract class Cryptogram{
         for(String i: guesses.keySet()){
             System.out.print(i + ":" + freqs.get(i) + ", ");
         }
+        char[] letterList = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+        Double[] freqList = {8.55, 1.60, 3.16, 3.87, 12.10, 2.18, 2.09, 4.96, 7.33, 0.22, 0.81, 4.21, 2.53, 7.17, 7.47, 2.07, 0.10, 6.33, 6.73, 8.94, 2.68, 1.06, 1.83, 0.19, 1.72, 0.11};
+        System.out.println("\nThe frequencies of the letters in the English language: ");
+        for(int i = 0; i<26; i++){
+            System.out.println(letterList[i] + " : " + freqList[i] + "%");
+        }
         System.out.println();
     }
 
