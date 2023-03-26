@@ -9,16 +9,18 @@ import java.io.IOException;
 
 public class Players{
     List<Player> allPlayers = new ArrayList<Player>();
-
+    String playerFile = "AllPlayers.txt";
     //this should just be the constructor of Players
     public Players(){
-        File myObj = new File("AllPlayers.txt");
+        File myObj = new File(playerFile);
         try (Scanner in = new Scanner(myObj)) {
             String[] data = null;
             
             while (in.hasNextLine()){
                 data = in.nextLine().split(" ");
-                allPlayers.add(new Player(data[0],Double.valueOf(data[1]),Integer.valueOf(data[2]),Integer.valueOf(data[3]),Integer.valueOf(data[4])));
+                if (data.length == 5){
+                    allPlayers.add(new Player(data[0],Double.valueOf(data[1]),Integer.valueOf(data[2]),Integer.valueOf(data[3]),Integer.valueOf(data[4])));
+                }
             }
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
@@ -29,7 +31,7 @@ public class Players{
     public void addPlayer(String name, double acc, int numGuess, int numPlayed, int numCompleted){
         allPlayers.add(new Player(name,acc,numGuess,numPlayed,numCompleted));
         try{ 
-            FileWriter mywriter = new FileWriter("AllPlayers.txt", true);
+            FileWriter mywriter = new FileWriter(playerFile, true);
             BufferedWriter bw = new BufferedWriter(mywriter);
             bw.write(name +" "+ acc +" "+ numGuess +" "+ numPlayed +" "+ numCompleted + "\n");
             bw.close();
@@ -41,7 +43,7 @@ public class Players{
     }
 
     public void savePlayer(Player p){
-            try (Scanner in = new Scanner(new File("AllPlayers.txt"))) {
+            try (Scanner in = new Scanner(new File(playerFile))) {
                 StringBuffer buffer = new StringBuffer();
                 while (in.hasNextLine()){
                     buffer.append(in.nextLine() + System.lineSeparator());
@@ -52,7 +54,7 @@ public class Players{
                 String oldData = (old.username +" "+ old.accuracy +" "+ old.totalGuesses +" "+ old.cryptogramsPlayed +" "+ old.cryptogramsCompleted);
                 data = data.replaceAll(oldData, (p.username +" "+ p.accuracy +" "+ p.totalGuesses +" "+ p.cryptogramsPlayed +" "+ p.cryptogramsCompleted));
                 try {
-                    FileWriter mywriter = new FileWriter("AllPlayers.txt");
+                    FileWriter mywriter = new FileWriter(playerFile);
                     mywriter.append(data);
                     mywriter.close();
                 } catch (IOException e) {

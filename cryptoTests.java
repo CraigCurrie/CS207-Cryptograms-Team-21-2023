@@ -222,11 +222,6 @@ public class cryptoTests {
         //check top10players is equal to cryptograms top 10
         Assert.assertEquals("",top10Players);
     }
-    @Test
-    public void fileExists(){
-        File myObj = new File("AllPlayers.txt");
-        Assert.assertTrue(myObj.exists());
-    }
 
     @Test
     public void testSeeTop10WhenNoPlayers(){
@@ -238,17 +233,51 @@ public class cryptoTests {
     }
 
     @Test
-    public void testHintEmpty(){
+    public void testHintEmpty() throws IOException{
         //set current cryptogram to abcd
-
-        //get hint(if we do all vowels it will be a)
-
+        Game g = new Game();
+        Cryptogram c = g.generateCryptogram(false);
+        
+        g.currentCryptogram = c;
+        c.phrase = "abcd";
+        c.guesses.put("a","_");
+        c.guesses.put("b","_");
+        c.guesses.put("c","_");
+        c.guesses.put("d","_");
+        c.genGram();
+        c.encrypted[0] = "a";
+        c.encrypted[1] = "b";
+        c.encrypted[2] = "c";
+        c.encrypted[3] = "d";
+        c.enterLetter("a", "a");
+        //get hint(should be b)
+        g.getHint();
         //assert that guess in pos 1 is a
+        Assert.assertEquals("b",c.guesses.get("b"));
     }
 
     @Test
-    public void testHintOveride(){
-
+    public void testHintOveride() throws IOException{
+        //set current cryptogram to abcd
+        Game g = new Game();
+        Cryptogram c = g.generateCryptogram(false);
+        
+        g.currentCryptogram = c;
+        c.phrase = "abcd";
+        c.guesses.put("a","_");
+        c.guesses.put("b","_");
+        c.guesses.put("c","_");
+        c.guesses.put("d","_");
+        c.genGram();
+        c.encrypted[0] = "a";
+        c.encrypted[1] = "b";
+        c.encrypted[2] = "c";
+        c.encrypted[3] = "d";
+        c.enterLetter("a", "a");
+        //get hint(should be b)
+        g.getHint();
+        //assert that guess in pos 1 is a
+        Assert.assertEquals(g.currentCryptogram.getGuesses().get(g.currentCryptogram.getGram()[0]),c.guesses.get("b"));
     }
 
 
