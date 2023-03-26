@@ -182,13 +182,17 @@ public class cryptoTests {
         Assert.assertEquals(expectedOutput, outContent.toString().trim());
     }
 
+    
     @Test
-    public void testShowFrequencies(){
-        //set cryptogram to "abbcccdddd"
-
-        //run frequencies 
-
-        //assert that frequencies for a-d are 1,2,3,4
+    public void testShowFrequencies() throws IOException{  
+        //create an instance of the game
+        game.playGame();
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        //run show frequencies
+        game.viewFrequencies();
+        //assert output is a message saying the correct frequencies
+        String expectedOutput = "a: 1\nb: 1\nc: 1\nd: 1\ne: 1\nf: 1\ng: 1\nh: 1\ni: 1\nj: 1\nk: 1\nl: 1\nm: 1\nn: 1\no: 1\np: 1\nq: 1\nr: 1\ns: 1\nt: 1\nu: 1\nv: 1\nw: 1\nx: 1\ny: 1\nz: 1";
+        Assert.assertEquals(expectedOutput, outContent.toString().trim());
 
     }
 
