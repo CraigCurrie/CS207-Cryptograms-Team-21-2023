@@ -187,50 +187,32 @@ public class cryptoTests {
 
     @Test
     public void testSeeTop10(){
-        List<String> top10Players = new ArrayList<String>();
-        List<Player> tempAllPlayers = new ArrayList<Player>();
-        File myObj = new File("AllPlayers.txt");
-        try (Scanner scan = new Scanner(myObj)) {
-            String[] data = null;
-            int i2 = 0;
-            while (scan.hasNextLine()){
-                data = scan.nextLine().split(" ");
-                if (data.length != 5) {
-                    Assert.assertEquals("", data[0]);
-                    i2 = i2 + 1;
-                    // handle error condition (e.g. log error, skip line, etc.)
-                } else {
-                    tempAllPlayers.add(new Player(data[0],Double.valueOf(data[1]),Integer.valueOf(data[2]),Integer.valueOf(data[3]),Integer.valueOf(data[4])));
-                }
-                
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-            e.printStackTrace();
-        }
-        Collections.sort(tempAllPlayers);
-
-        for(int i = 0; i < 10; i++){
-            if(tempAllPlayers.size() < 1 + i){
-                top10Players.add(null);
-            }
-            else{
-                top10Players.add(tempAllPlayers.get(i).username);
-            }
-        }
-
-        //check top10players is equal to cryptograms top 10
-        Assert.assertEquals("",top10Players);
+        Players p = new Players();
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
+        //set file to empty file
+        p.playerFile = "top10PlayerTest.txt";
+        //run see top 10 players
+        p.showLeaderboard();
+        //assert output is a message saying the correct players
+        String expectedOutput = "1. test1 - 27\n2. test7 - 11\n3. test2 - 8\n4. test3 - 7\n5. test4 - 6\n6. test5 - 5\n7. test6 - 4\n8. test10 - 3\n9. test8 - 2\n10. test9 - 1";
+        Assert.assertEquals(expectedOutput, outContent.toString().trim());
     }
 
     @Test
     public void testSeeTop10WhenNoPlayers(){
+        Players p = new Players();
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
         //set file to empty file
-
+        p.playerFile = "noPlayerTest.txt";
         //run see top 10 players
-
+        p.showLeaderboard();
         //assert output is a message saying that there is no players stored
+        String expectedOutput = "No players have been added yet.";
+        Assert.assertEquals(expectedOutput, outContent.toString().trim());
     }
+    
 
     @Test
     public void testHintEmpty() throws IOException{

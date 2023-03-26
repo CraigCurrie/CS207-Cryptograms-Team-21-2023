@@ -77,7 +77,7 @@ public class Players{
     }
 
     public void showLeaderboard(){
-        if(allPlayers.size() == 0){
+        if(allPlayers == null){
             System.out.println("No players have been added yet.");
         }else{
             List<Player> tempPlayers = allPlayers;
